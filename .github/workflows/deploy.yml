@@ -1,0 +1,74 @@
+name: Deploy BizPilot to cPanel
+
+on:
+  push:
+    branches: [ main ]
+
+jobs:
+  deploy:
+    name: Build & Deploy
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout Code
+        uses: actions/checkout@v4
+
+      - name: Setup PHP
+        uses: shivammathur/setup-php@v2
+        with:
+          php-version: '8.3'
+          extensions: mbstring, pdo, pdo_mysql, tokenizer, xml, ctype, json, bcmath, fileinfo
+          coverage: none
+
+      - name: Install Composer Dependencies
+        run: composer install --no-dev --optimize-autoloader --no-interaction --no-progress
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+          cache: 'npm'
+
+      - name: Install NPM Dependencies
+        run: npm ci
+
+      - name: Build Frontend Assets (Vite + React)
+        run: npm run build
+
+      - name: Deploy via SSH
+        uses: appleboy/ssh-action@v1.0.3
+        with:
+          host: ${{ secrets.CPANEL_HOST }}
+          username: ${{ secrets.CPANEL_USERNAME }}
+          key: ${{ secrets.SSH_PRIVATE_KEY }}
+          port: 22
+          script: |
+            cd ~/public_html/bizpilot
+
+            echo "--- Pulling latest code ---"
+            git pull origin main
+
+            echo "--- Installing PHP dependencies ---"
+            composer install --no-dev --optimize-autoloader --no-interaction
+
+            echo "--- Running database migrations ---"
+            php artisan migrate --force
+
+            echo "--- Rebuilding caches ---"
+            php artisan optimize:clear
+            php artisan optimize
+
+            echo "--- Ensuring storage symlink ---"
+            php artisan storage:link
+
+            echo "✅ Deployment complete."
+
+      - name: Sync Built Frontend Assets
+        uses: burnett01/rsync-deployments@7.0.1
+        with:
+          switches: -avzr --delete
+          path: public/build/
+          remote_path: ~/public_html/bizpilot/public/build/
+          remote_host: ${{ secrets.CPANEL_HOST }}
+          remote_user: ${{ secrets.CPANEL_USERNAME }}
+          remote_key: ${{ secrets.SSH_PRIVATE_KEY }}
