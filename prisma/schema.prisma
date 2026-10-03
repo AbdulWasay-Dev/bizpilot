@@ -1,0 +1,85 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "mysql"
+  url      = env("DATABASE_URL")
+}
+
+model Business {
+  id        String   @id @default(cuid())
+  name      String
+  colorTag  String   @default("#6366F1")
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+  
+  platforms PlatformProfile[]
+  decisions Decision[]
+  inventory InventoryItem[]
+  ideas     Idea[]
+}
+
+model PlatformProfile {
+  id         String   @id @default(cuid())
+  businessId String
+  platform   String   // e.g. "Instagram", "TikTok"
+  handle     String
+  url        String
+  color      String?
+  targetWeekly Int    @default(3)
+  createdAt  DateTime @default(now())
+  updatedAt  DateTime @updatedAt
+
+  business   Business @relation(fields: [businessId], references: [id], onDelete: Cascade)
+}
+
+model Decision {
+  id          String   @id @default(cuid())
+  businessId  String
+  title       String
+  context     String?  @db.Text
+  status      String   @default("DRAFT")
+  urgency     String   @default("MEDIUM")
+  impact      String   @default("MEDIUM")
+  options     Json?
+  chosenOption String?
+  reviewDate  DateTime?
+  rating      Int?
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+
+  business    Business @relation(fields: [businessId], references: [id], onDelete: Cascade)
+}
+
+model InventoryItem {
+  id             String   @id @default(cuid())
+  businessId     String
+  title          String
+  category       String
+  payload        String?  // encrypted license or link
+  purchaseCost   Decimal  @db.Decimal(10, 2)
+  retailPrice    Decimal  @db.Decimal(10, 2)
+  status         String   @default("AVAILABLE")
+  vendorId       String?
+  vendorRef      String?
+  createdAt      DateTime @default(now())
+  updatedAt      DateTime @updatedAt
+
+  business       Business @relation(fields: [businessId], references: [id], onDelete: Cascade)
+}
+
+model Idea {
+  id              String   @id @default(cuid())
+  businessId      String
+  title           String
+  content         String?  @db.Text
+  category        String?
+  impactScore     Int      @default(5)
+  confidenceScore Int      @default(5)
+  easeScore       Int      @default(5)
+  createdAt       DateTime @default(now())
+  updatedAt       DateTime @updatedAt
+
+  business        Business @relation(fields: [businessId], references: [id], onDelete: Cascade)
+}
