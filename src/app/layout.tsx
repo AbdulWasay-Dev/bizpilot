@@ -3,32 +3,24 @@ import { Inter } from "next/font/google";
 import "./globals.css";
 import { Sidebar } from "@/components/Sidebar";
 
-const inter = Inter({
-  subsets: ["latin"],
-  variable: "--font-inter",
-});
+const inter = Inter({ subsets: ["latin"], variable: "--font-inter" });
 
 export const metadata: Metadata = {
-  title: "BizPilot",
-  description: "Multi-Business Command Center",
+    title: "BizPilot — Multi-Business Command Center",
+    description: "Unified workspace for entrepreneurs managing multiple businesses.",
 };
 
-export default function RootLayout({
-  children,
-}: Readonly<{
-  children: React.ReactNode;
-}>) {
-  return (
-    <html lang="en" className={`${inter.variable} antialiased`}>
-      <body className="min-h-screen bg-[#0D1117] flex font-sans">
-        <Sidebar />
-        <main className="flex-1 flex flex-col min-h-screen overflow-hidden">
-          {/* Top Bar can go here or inside pages */}
-          <div className="flex-1 overflow-auto">
-            {children}
-          </div>
-        </main>
-      </body>
-    </html>
-  );
+export default function RootLayout({ children }: { children: React.ReactNode }) {
+    return (
+        <html lang="en" className={`${inter.variable} antialiased`}>
+            <body className="min-h-screen bg-[#0a0a0a] flex font-sans text-white">
+                <Sidebar />
+                <main className="flex-1 flex flex-col min-h-screen overflow-hidden">
+                    <div className="flex-1 overflow-y-auto">
+                        {children}
+                    </div>
+                </main>
+            </body>
+        </html>
+    );
 }

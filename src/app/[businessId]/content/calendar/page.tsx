@@ -1,14 +1,14 @@
 'use client';
 
 import { useState } from 'react';
+import { useParams } from 'next/navigation';
+import { MOCK_BUSINESSES } from '@/contexts/AppContext';
 import { 
-    Calendar as CalendarIcon, 
     ChevronLeft, 
     ChevronRight, 
     Plus, 
     Image as ImageIcon, 
     Copy, 
-    MoreHorizontal,
     LayoutGrid,
     AlignLeft
 } from 'lucide-react';
@@ -16,12 +16,15 @@ import {
 // Mock Data for the Calendar
 const daysOfWeek = ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'];
 const mockPosts = [
-    { id: 1, date: 15, title: 'Summer Sale Promo', platform: 'Instagram', time: '10:00 AM', status: 'scheduled' },
-    { id: 2, date: 18, title: 'New Product Teaser', platform: 'TikTok', time: '2:30 PM', status: 'draft' },
-    { id: 3, date: 22, title: 'Founder Q&A', platform: 'Twitter', time: '1:00 PM', status: 'published' },
+    { id: 1, date: 15, title: 'Summer Sale Promo', platform: 'Instagram', time: '10:00 AM', status: 'scheduled', platformColor: 'bg-pink-500' },
+    { id: 2, date: 18, title: 'New Product Teaser', platform: 'TikTok', time: '2:30 PM', status: 'draft', platformColor: 'bg-cyan-500' },
+    { id: 3, date: 22, title: 'Founder Q&A', platform: 'Twitter', time: '1:00 PM', status: 'published', platformColor: 'bg-sky-500' },
+    { id: 4, date: 25, title: 'Weekly Roundup', platform: 'LinkedIn', time: '9:00 AM', status: 'scheduled', platformColor: 'bg-blue-600' },
 ];
 
 export default function ContentStudio() {
+    const { businessId } = useParams() as { businessId: string };
+    const business = MOCK_BUSINESSES.find(b => b.id === businessId);
     const [view, setView] = useState<'month' | 'week'>('month');
     const [isCreatorOpen, setIsCreatorOpen] = useState(false);
     const [caption, setCaption] = useState('');
@@ -33,8 +36,10 @@ export default function ContentStudio() {
                 {/* Header */}
                 <header className="h-20 shrink-0 border-b border-white/10 px-8 flex items-center justify-between bg-[#0a0a0a]/80 backdrop-blur-xl z-10">
                     <div className="flex items-center gap-6">
-                        <h1 className="text-2xl font-semibold text-white tracking-tight">Content Studio</h1>
-                        
+                        <div>
+                            <h1 className="text-lg font-semibold text-white tracking-tight">Content Studio</h1>
+                            <p className="text-[11px] text-white/40">{business?.name}</p>
+                        </div>
                         {/* Segmented Control */}
                         <div className="bg-white/5 p-1 rounded-lg flex items-center">
                             <button 

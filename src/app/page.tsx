@@ -1,156 +1,164 @@
 'use client';
 
-import { Plus, MoreHorizontal, ArrowUpRight, AlertCircle, Edit2, Play, DollarSign, PenTool, LayoutGrid } from 'lucide-react';
+import { MOCK_BUSINESSES, Business } from '@/contexts/AppContext';
+import { 
+    TrendingUp, Package, Image, Target, AlertCircle, 
+    Plus, DollarSign, PenTool, ArrowUpRight, Flame, 
+    Clock, ChevronRight
+} from 'lucide-react';
 import Link from 'next/link';
 
-// Mock Data for Phase 1
-const businesses = [
-    {
-        id: '1',
-        name: 'Glow Skincare',
-        color: 'from-pink-500 to-rose-500',
-        textColor: 'text-rose-400',
-        metrics: { revenue: 12450.00, salesCount: 142, postsThisWeek: 3, targetScore: 92 },
-        lastActivity: '2 hours ago',
-        neglected: false,
-    },
-    {
-        id: '2',
-        name: 'TechGear',
-        color: 'from-blue-500 to-indigo-500',
-        textColor: 'text-blue-400',
-        metrics: { revenue: 3200.00, salesCount: 12, postsThisWeek: 0, targetScore: 45 },
-        lastActivity: '4 days ago',
-        neglected: true,
-    },
-    {
-        id: '3',
-        name: 'Fitness Pro',
-        color: 'from-emerald-400 to-teal-500',
-        textColor: 'text-emerald-400',
-        metrics: { revenue: 8900.50, salesCount: 89, postsThisWeek: 5, targetScore: 88 },
-        lastActivity: '1 day ago',
-        neglected: false,
-    }
-];
+function TargetBar({ current, target }: { current: number; target: number }) {
+    const pct = Math.min(100, Math.round((current / target) * 100));
+    const color = pct >= 100 ? 'bg-emerald-500' : pct >= 60 ? 'bg-amber-400' : 'bg-rose-500';
+    return (
+        <div className="w-full bg-white/5 rounded-full h-1.5">
+            <div className={`h-1.5 rounded-full transition-all ${color}`} style={{ width: `${pct}%` }} />
+        </div>
+    );
+}
 
-export default function CommandCenter() {
-    const totalRevenue = businesses.reduce((acc, b) => acc + b.metrics.revenue, 0);
-    const totalSales = businesses.reduce((acc, b) => acc + b.metrics.salesCount, 0);
-    const neglectedCount = businesses.filter(b => b.neglected).length;
+function StatusBadge({ current, target }: { current: number; target: number }) {
+    const pct = Math.round((current / target) * 100);
+    if (pct >= 100) return <span className="text-[10px] font-semibold text-emerald-400 bg-emerald-400/10 px-2 py-0.5 rounded-full">🏆 Exceeded</span>;
+    if (pct >= 60) return <span className="text-[10px] font-semibold text-amber-400 bg-amber-400/10 px-2 py-0.5 rounded-full">🟡 At Risk</span>;
+    return <span className="text-[10px] font-semibold text-rose-400 bg-rose-400/10 px-2 py-0.5 rounded-full">🔴 Behind</span>;
+}
+
+function BusinessCard({ b }: { b: Business }) {
+    const isNeglected = b.metrics.neglectScore < 50;
+    const totalRevenue = MOCK_BUSINESSES.reduce((s, x) => s + x.metrics.revenueMonth, 0);
 
     return (
-        <div className="flex-1 overflow-y-auto bg-[#0a0a0a]">
-            {/* Header / Global Summary Strip */}
-            <header className="sticky top-0 z-10 bg-[#0a0a0a]/80 backdrop-blur-xl border-b border-white/10 px-8 py-5 flex items-center justify-between">
+        <div className={`bg-[#141414] border rounded-2xl overflow-hidden flex flex-col transition-all duration-200 hover:-translate-y-0.5 hover:shadow-2xl hover:shadow-black/60 ${isNeglected ? 'border-rose-500/20' : 'border-white/[0.06]'}`}>
+            {/* Card header */}
+            <div className="p-5 flex items-center justify-between gap-3">
+                <div className="flex items-center gap-3">
+                    <div className={`w-10 h-10 rounded-xl bg-gradient-to-br ${b.color} flex items-center justify-center text-white font-bold text-base shrink-0 shadow-lg`}>
+                        {b.name.charAt(0)}
+                    </div>
+                    <div>
+                        <h2 className="text-base font-semibold text-white leading-tight">{b.name}</h2>
+                        <div className="flex items-center gap-1.5 mt-0.5">
+                            <span className={`w-1.5 h-1.5 rounded-full ${isNeglected ? 'bg-rose-500' : 'bg-emerald-500'}`} />
+                            <span className="text-xs text-white/40">{b.metrics.lastActivity}</span>
+                        </div>
+                    </div>
+                </div>
+                <Link href={`/${b.id}`} className="flex items-center gap-1 text-xs font-medium text-white/40 hover:text-white transition-colors shrink-0">
+                    Open <ChevronRight className="w-3.5 h-3.5" />
+                </Link>
+            </div>
+
+            {/* KPI Grid */}
+            <div className="px-5 pb-4 grid grid-cols-2 gap-4">
                 <div>
-                    <h1 className="text-2xl font-semibold text-white tracking-tight">Command Center</h1>
-                    <p className="text-sm text-white/50 mt-1">Global workspace overview</p>
+                    <p className="text-[10px] font-semibold text-white/40 uppercase tracking-wider mb-1 flex items-center gap-1"><TrendingUp className="w-3 h-3" /> Revenue (MTD)</p>
+                    <p className="text-xl font-semibold text-white">${b.metrics.revenueMonth.toLocaleString()}</p>
                 </div>
-                <div className="flex items-center gap-6">
-                    <div className="flex flex-col items-end">
-                        <span className="text-xs font-medium text-white/50 uppercase tracking-wider">Total Revenue</span>
-                        <span className="text-lg font-semibold text-white">${totalRevenue.toLocaleString(undefined, { minimumFractionDigits: 2 })}</span>
+                <div>
+                    <p className="text-[10px] font-semibold text-white/40 uppercase tracking-wider mb-1 flex items-center gap-1"><Package className="w-3 h-3" /> Items Sold</p>
+                    <p className="text-xl font-semibold text-white">{b.metrics.itemsSold}</p>
+                </div>
+                <div>
+                    <p className="text-[10px] font-semibold text-white/40 uppercase tracking-wider mb-1 flex items-center gap-1"><Image className="w-3 h-3" /> Posts (Week)</p>
+                    <div className="space-y-1.5">
+                        <div className="flex items-center justify-between">
+                            <span className="text-base font-semibold text-white">{b.metrics.postsWeek} / {b.metrics.targetPostsWeek}</span>
+                            <StatusBadge current={b.metrics.postsWeek} target={b.metrics.targetPostsWeek} />
+                        </div>
+                        <TargetBar current={b.metrics.postsWeek} target={b.metrics.targetPostsWeek} />
                     </div>
-                    <div className="w-px h-8 bg-white/10"></div>
-                    <div className="flex flex-col items-end">
-                        <span className="text-xs font-medium text-white/50 uppercase tracking-wider">Total Sales</span>
-                        <span className="text-lg font-semibold text-white">{totalSales}</span>
-                    </div>
-                    <div className="w-px h-8 bg-white/10"></div>
-                    <button className="flex items-center gap-2 bg-white text-black px-4 py-2 rounded-lg font-medium text-sm hover:bg-white/90 transition-colors">
-                        <Plus className="w-4 h-4" />
-                        New Business
+                </div>
+                <div>
+                    <p className="text-[10px] font-semibold text-white/40 uppercase tracking-wider mb-1 flex items-center gap-1"><Flame className="w-3 h-3" /> Streak</p>
+                    <p className="text-base font-semibold text-white flex items-center gap-2">
+                        {b.metrics.streak > 0 ? `🔥 ${b.metrics.streak} days` : <span className="text-rose-400">No streak</span>}
+                    </p>
+                </div>
+            </div>
+
+            {/* Neglect warning */}
+            {isNeglected && (
+                <div className="mx-5 mb-4 px-3 py-2 bg-rose-500/10 border border-rose-500/20 rounded-lg flex items-start gap-2">
+                    <AlertCircle className="w-3.5 h-3.5 text-rose-400 shrink-0 mt-0.5" />
+                    <p className="text-[11px] text-rose-400 leading-tight">
+                        {b.metrics.postsWeek === 0 ? 'No posts recorded this week.' : 'Posts significantly behind target.'} Needs attention.
+                    </p>
+                </div>
+            )}
+
+            {/* Quick actions */}
+            <div className="mt-auto border-t border-white/[0.06] grid grid-cols-3">
+                {[
+                    { icon: PenTool, label: 'Post Idea' },
+                    { icon: DollarSign, label: 'Log Sale' },
+                    { icon: Clock, label: 'Mark Active' },
+                ].map(action => (
+                    <button key={action.label} className="flex flex-col items-center gap-1.5 py-3 text-white/40 hover:text-white hover:bg-white/[0.03] transition-colors border-r border-white/[0.06] last:border-r-0">
+                        <action.icon className="w-4 h-4" />
+                        <span className="text-[9px] font-medium uppercase tracking-wider">{action.label}</span>
                     </button>
+                ))}
+            </div>
+        </div>
+    );
+}
+
+export default function UniversalDashboard() {
+    const totalRevenue = MOCK_BUSINESSES.reduce((s, b) => s + b.metrics.revenueMonth, 0);
+    const totalPosts = MOCK_BUSINESSES.reduce((s, b) => s + b.metrics.postsWeek, 0);
+    const totalTargetPosts = MOCK_BUSINESSES.reduce((s, b) => s + b.metrics.targetPostsWeek, 0);
+    const bestStreak = Math.max(...MOCK_BUSINESSES.map(b => b.metrics.streak));
+    const neglectedCount = MOCK_BUSINESSES.filter(b => b.metrics.neglectScore < 50).length;
+
+    return (
+        <div className="min-h-screen bg-[#0a0a0a]">
+            {/* Top bar */}
+            <header className="sticky top-0 z-10 bg-[#0a0a0a]/80 backdrop-blur-xl border-b border-white/[0.06] px-8 h-16 flex items-center justify-between">
+                <div>
+                    <h1 className="text-lg font-semibold text-white">Universal Dashboard</h1>
+                    <p className="text-xs text-white/40">All businesses at a glance</p>
                 </div>
+                <button className="flex items-center gap-2 bg-white text-black px-4 py-2 rounded-lg font-semibold text-sm hover:bg-white/90 transition-colors">
+                    <Plus className="w-4 h-4" /> Add Business
+                </button>
             </header>
 
-            <main className="p-8 max-w-7xl mx-auto space-y-8">
-                {/* Neglect Detection Engine Banner */}
+            {/* Global summary strip */}
+            <div className="bg-[#111] border-b border-white/[0.06] px-8 py-3 flex items-center gap-8">
+                <div className="flex items-center gap-2">
+                    <TrendingUp className="w-4 h-4 text-emerald-400" />
+                    <span className="text-xs text-white/50">Revenue (Month)</span>
+                    <span className="text-sm font-semibold text-white">${totalRevenue.toLocaleString()}</span>
+                </div>
+                <div className="w-px h-4 bg-white/10" />
+                <div className="flex items-center gap-2">
+                    <Image className="w-4 h-4 text-pink-400" />
+                    <span className="text-xs text-white/50">Posts (Week)</span>
+                    <span className="text-sm font-semibold text-white">{totalPosts}/{totalTargetPosts}</span>
+                </div>
+                <div className="w-px h-4 bg-white/10" />
+                <div className="flex items-center gap-2">
+                    <Flame className="w-4 h-4 text-orange-400" />
+                    <span className="text-xs text-white/50">Best Streak</span>
+                    <span className="text-sm font-semibold text-white">🔥 {bestStreak} days</span>
+                </div>
                 {neglectedCount > 0 && (
-                    <div className="bg-rose-500/10 border border-rose-500/20 rounded-2xl p-4 flex items-start gap-4">
-                        <div className="bg-rose-500/20 p-2 rounded-full mt-0.5">
-                            <AlertCircle className="w-5 h-5 text-rose-500" />
+                    <>
+                        <div className="w-px h-4 bg-white/10" />
+                        <div className="flex items-center gap-2">
+                            <AlertCircle className="w-4 h-4 text-rose-400" />
+                            <span className="text-sm font-semibold text-rose-400">{neglectedCount} {neglectedCount === 1 ? 'business needs' : 'businesses need'} attention</span>
                         </div>
-                        <div>
-                            <h3 className="text-rose-500 font-semibold text-sm">Attention Required</h3>
-                            <p className="text-rose-500/80 text-sm mt-1">
-                                {neglectedCount} business{neglectedCount > 1 ? 'es require' : ' requires'} your attention. No posts or sales logged in the last 3 days.
-                            </p>
-                        </div>
-                    </div>
+                    </>
                 )}
+            </div>
 
-                {/* Business Cards Grid */}
-                <div className="grid grid-cols-1 lg:grid-cols-2 xl:grid-cols-3 gap-6">
-                    {businesses.map((business) => (
-                        <Link href={`/${business.id}/content/calendar`} key={business.id} className="group relative bg-[#141414] border border-white/5 hover:border-white/15 rounded-2xl overflow-hidden transition-all duration-300 shadow-xl shadow-black/50 flex flex-col cursor-pointer hover:-translate-y-1">
-                            {/* Card Header */}
-                            <div className="p-6 pb-4 border-b border-white/5 flex items-start justify-between">
-                                <div className="flex items-center gap-3">
-                                    <div className={`w-10 h-10 rounded-xl bg-gradient-to-br ${business.color} p-0.5 shadow-inner`}>
-                                        <div className="w-full h-full bg-black/20 rounded-[10px] flex items-center justify-center backdrop-blur-sm">
-                                            <span className="text-white font-bold text-sm">{business.name.charAt(0)}</span>
-                                        </div>
-                                    </div>
-                                    <div>
-                                        <h2 className="text-lg font-semibold text-white tracking-tight">{business.name}</h2>
-                                        <span className="text-xs text-white/40 flex items-center gap-1.5 mt-0.5">
-                                            <span className={`w-1.5 h-1.5 rounded-full ${business.neglected ? 'bg-rose-500' : 'bg-emerald-500'}`}></span>
-                                            {business.lastActivity}
-                                        </span>
-                                    </div>
-                                </div>
-                                <div className="text-white/40 hover:text-white transition-colors p-1 rounded-md hover:bg-white/10">
-                                    <MoreHorizontal className="w-5 h-5" />
-                                </div>
-                            </div>
-
-                            {/* Metrics */}
-                            <div className="p-6 grid grid-cols-2 gap-y-6 gap-x-4">
-                                <div>
-                                    <p className="text-xs font-medium text-white/40 uppercase tracking-wider mb-1">Revenue</p>
-                                    <p className="text-xl font-semibold text-white flex items-center gap-2">
-                                        ${business.metrics.revenue.toLocaleString()}
-                                        <ArrowUpRight className="w-4 h-4 text-emerald-500" />
-                                    </p>
-                                </div>
-                                <div>
-                                    <p className="text-xs font-medium text-white/40 uppercase tracking-wider mb-1">Target Score</p>
-                                    <div className="flex items-end gap-2">
-                                        <p className={`text-xl font-semibold ${business.metrics.targetScore < 50 ? 'text-rose-500' : 'text-emerald-500'}`}>
-                                            {business.metrics.targetScore}
-                                        </p>
-                                        <span className="text-sm text-white/40 mb-0.5">/ 100</span>
-                                    </div>
-                                </div>
-                                <div>
-                                    <p className="text-xs font-medium text-white/40 uppercase tracking-wider mb-1">Sales (Wk)</p>
-                                    <p className="text-base font-medium text-white">{business.metrics.salesCount}</p>
-                                </div>
-                                <div>
-                                    <p className="text-xs font-medium text-white/40 uppercase tracking-wider mb-1">Posts (Wk)</p>
-                                    <p className="text-base font-medium text-white">{business.metrics.postsThisWeek}</p>
-                                </div>
-                            </div>
-
-                            {/* Quick Action Row */}
-                            <div className="mt-auto p-4 bg-white/[0.02] border-t border-white/5 flex gap-2" onClick={(e) => e.preventDefault()}>
-                                <button className="flex-1 flex flex-col items-center justify-center py-2.5 rounded-lg bg-white/5 hover:bg-white/10 text-white transition-colors group/btn">
-                                    <PenTool className="w-4 h-4 text-white/60 mb-1.5 group-hover/btn:text-white transition-colors" />
-                                    <span className="text-[10px] font-medium uppercase tracking-wider text-white/60 group-hover/btn:text-white">Post Idea</span>
-                                </button>
-                                <button className="flex-1 flex flex-col items-center justify-center py-2.5 rounded-lg bg-white/5 hover:bg-white/10 text-white transition-colors group/btn">
-                                    <DollarSign className="w-4 h-4 text-white/60 mb-1.5 group-hover/btn:text-white transition-colors" />
-                                    <span className="text-[10px] font-medium uppercase tracking-wider text-white/60 group-hover/btn:text-white">Log Sale</span>
-                                </button>
-                                <button className="flex-1 flex flex-col items-center justify-center py-2.5 rounded-lg bg-white/5 hover:bg-white/10 text-white transition-colors group/btn">
-                                    <Play className="w-4 h-4 text-white/60 mb-1.5 group-hover/btn:text-white transition-colors" />
-                                    <span className="text-[10px] font-medium uppercase tracking-wider text-white/60 group-hover/btn:text-white">Active</span>
-                                </button>
-                            </div>
-                        </Link>
-                    ))}
+            {/* Business cards */}
+            <main className="p-8">
+                <div className="grid grid-cols-1 lg:grid-cols-2 xl:grid-cols-3 gap-5 max-w-7xl mx-auto">
+                    {MOCK_BUSINESSES.map(b => <BusinessCard key={b.id} b={b} />)}
                 </div>
             </main>
         </div>
