@@ -82,7 +82,7 @@ export default function CommandCenter() {
                 {/* Business Cards Grid */}
                 <div className="grid grid-cols-1 lg:grid-cols-2 xl:grid-cols-3 gap-6">
                     {businesses.map((business) => (
-                        <div key={business.id} className="group relative bg-[#141414] border border-white/5 hover:border-white/15 rounded-2xl overflow-hidden transition-all duration-300 shadow-xl shadow-black/50 flex flex-col">
+                        <Link href={`/${business.id}/content/calendar`} key={business.id} className="group relative bg-[#141414] border border-white/5 hover:border-white/15 rounded-2xl overflow-hidden transition-all duration-300 shadow-xl shadow-black/50 flex flex-col cursor-pointer hover:-translate-y-1">
                             {/* Card Header */}
                             <div className="p-6 pb-4 border-b border-white/5 flex items-start justify-between">
                                 <div className="flex items-center gap-3">
@@ -99,9 +99,9 @@ export default function CommandCenter() {
                                         </span>
                                     </div>
                                 </div>
-                                <button className="text-white/40 hover:text-white transition-colors p-1 rounded-md hover:bg-white/10">
+                                <div className="text-white/40 hover:text-white transition-colors p-1 rounded-md hover:bg-white/10">
                                     <MoreHorizontal className="w-5 h-5" />
-                                </button>
+                                </div>
                             </div>
 
                             {/* Metrics */}
@@ -133,7 +133,7 @@ export default function CommandCenter() {
                             </div>
 
                             {/* Quick Action Row */}
-                            <div className="mt-auto p-4 bg-white/[0.02] border-t border-white/5 flex gap-2">
+                            <div className="mt-auto p-4 bg-white/[0.02] border-t border-white/5 flex gap-2" onClick={(e) => e.preventDefault()}>
                                 <button className="flex-1 flex flex-col items-center justify-center py-2.5 rounded-lg bg-white/5 hover:bg-white/10 text-white transition-colors group/btn">
                                     <PenTool className="w-4 h-4 text-white/60 mb-1.5 group-hover/btn:text-white transition-colors" />
                                     <span className="text-[10px] font-medium uppercase tracking-wider text-white/60 group-hover/btn:text-white">Post Idea</span>
@@ -147,7 +147,7 @@ export default function CommandCenter() {
                                     <span className="text-[10px] font-medium uppercase tracking-wider text-white/60 group-hover/btn:text-white">Active</span>
                                 </button>
                             </div>
-                        </div>
+                        </Link>
                     ))}
                 </div>
             </main>
