@@ -4,6 +4,7 @@ import { useParams } from 'next/navigation';
 import { MOCK_BUSINESSES } from '@/contexts/AppContext';
 import { Plus, AlertTriangle, CheckCircle2, Clock, MoreHorizontal } from 'lucide-react';
 import { useState } from 'react';
+import { UniversalDashboardButton } from '@/components/UniversalDashboardButton';
 
 const mockDecisions = [
     {
@@ -53,9 +54,12 @@ export default function DecisionLog() {
                     <h1 className="text-base font-semibold text-white">Decision Log</h1>
                     <p className="text-[11px] text-white/40">{business?.name}</p>
                 </div>
-                <button className="flex items-center gap-2 bg-indigo-500/10 border border-indigo-500/20 text-indigo-400 px-4 py-2 rounded-lg text-sm font-medium hover:bg-indigo-500/20 transition-colors">
-                    <Plus className="w-4 h-4" /> New Decision
-                </button>
+                <div className="flex items-center gap-3">
+                    <UniversalDashboardButton />
+                    <button className="flex items-center gap-2 bg-indigo-500/10 border border-indigo-500/20 text-indigo-400 px-4 py-2 rounded-lg text-sm font-medium hover:bg-indigo-500/20 transition-colors">
+                        <Plus className="w-4 h-4" /> New Decision
+                    </button>
+                </div>
             </header>
 
             <main className="p-8 max-w-4xl mx-auto space-y-4">

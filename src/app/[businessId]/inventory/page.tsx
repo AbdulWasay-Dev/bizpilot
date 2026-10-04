@@ -4,6 +4,7 @@ import { useParams } from 'next/navigation';
 import { MOCK_BUSINESSES } from '@/contexts/AppContext';
 import { Plus, Copy, Star, MessageCircle, ExternalLink, Package, Search, Filter } from 'lucide-react';
 import { useState } from 'react';
+import { UniversalDashboardButton } from '@/components/UniversalDashboardButton';
 
 const mockInventory = [
     { id: '1', title: 'Windows 11 Pro Key', sku: 'WIN11PRO-001', category: 'LICENSE', status: 'AVAILABLE', cost: 4.50, price: 24.99, vendor: 'Alpha Keys', payload: 'XXXXX-XXXXX-XXXXX-XXXXX-XXXXX' },
@@ -49,9 +50,12 @@ export default function InventoryPage() {
                     <h1 className="text-base font-semibold text-white">Inventory & Vendors</h1>
                     <p className="text-[11px] text-white/40">{business?.name}</p>
                 </div>
-                <button className="flex items-center gap-2 bg-cyan-500/10 border border-cyan-500/20 text-cyan-400 px-4 py-2 rounded-lg text-sm font-medium hover:bg-cyan-500/20 transition-colors">
-                    <Plus className="w-4 h-4" /> Add Stock
-                </button>
+                <div className="flex items-center gap-3">
+                    <UniversalDashboardButton />
+                    <button className="flex items-center gap-2 bg-cyan-500/10 border border-cyan-500/20 text-cyan-400 px-4 py-2 rounded-lg text-sm font-medium hover:bg-cyan-500/20 transition-colors">
+                        <Plus className="w-4 h-4" /> Add Stock
+                    </button>
+                </div>
             </header>
 
             {/* Summary strip */}

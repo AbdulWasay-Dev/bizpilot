@@ -12,6 +12,7 @@ import {
     LayoutGrid,
     AlignLeft
 } from 'lucide-react';
+import { UniversalDashboardButton } from '@/components/UniversalDashboardButton';
 
 // Mock Data for the Calendar
 const daysOfWeek = ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'];
@@ -58,6 +59,7 @@ export default function ContentStudio() {
                     </div>
 
                     <div className="flex items-center gap-4">
+                        <UniversalDashboardButton />
                         <div className="flex items-center gap-2">
                             <button className="p-2 rounded-lg text-white/40 hover:text-white hover:bg-white/5 transition-colors">
                                 <ChevronLeft className="w-5 h-5" />

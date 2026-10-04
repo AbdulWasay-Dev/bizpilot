@@ -6,6 +6,7 @@ import {
     Plus, TrendingUp, ArrowDownLeft, Package, DollarSign,
     FileText, Receipt, ChevronRight, ExternalLink
 } from 'lucide-react';
+import { UniversalDashboardButton } from '@/components/UniversalDashboardButton';
 
 const mockTransactions = [
     { id: '1', type: 'SALE', description: 'Windows 11 Pro Key', amount: 24.99, date: '2026-10-04', ref: 'ORD-2841', channel: 'Direct' },
@@ -43,7 +44,8 @@ export default function FinanceLedger() {
                     <h1 className="text-base font-semibold text-white">Financial Ledger</h1>
                     <p className="text-[11px] text-white/40">{business?.name}</p>
                 </div>
-                <div className="flex gap-2">
+                <div className="flex items-center gap-3">
+                    <UniversalDashboardButton />
                     <button className="flex items-center gap-2 border border-white/10 text-white/70 px-3 py-1.5 rounded-lg text-sm font-medium hover:bg-white/5 hover:text-white transition-colors">
                         <Plus className="w-3.5 h-3.5" /> Log Sale
                     </button>

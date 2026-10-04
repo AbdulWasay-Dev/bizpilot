@@ -54,16 +54,42 @@ export default function BusinessDashboard() {
         <div className="min-h-screen bg-[#0a0a0a]">
             {/* Header */}
             <header className="sticky top-0 z-10 bg-[#0a0a0a]/80 backdrop-blur-xl border-b border-white/[0.06] px-8 h-16 flex items-center justify-between">
-                <div className="flex items-center gap-3">
-                    <div className={`w-8 h-8 rounded-lg bg-gradient-to-br ${business.color} flex items-center justify-center text-white font-bold text-sm`}>
-                        {business.name.charAt(0)}
+                <div className="flex items-center gap-4">
+                    <div className="flex items-center gap-3">
+                        <div className={`w-8 h-8 rounded-lg bg-gradient-to-br ${business.color} flex items-center justify-center text-white font-bold text-sm shadow-sm`}>
+                            {business.name.charAt(0)}
+                        </div>
+                        <div>
+                            <h1 className="text-base font-semibold text-white leading-tight">{business.name}</h1>
+                            <p className="text-[11px] text-white/40">Local Dashboard</p>
+                        </div>
                     </div>
-                    <div>
-                        <h1 className="text-base font-semibold text-white leading-tight">{business.name}</h1>
-                        <p className="text-[11px] text-white/40">Business Dashboard</p>
+
+                    {/* View Switcher Toggle: Local vs Universal */}
+                    <div className="bg-white/5 border border-white/10 p-1 rounded-xl flex items-center ml-2">
+                        <button
+                            className="flex items-center gap-2 px-3 py-1.5 rounded-lg text-xs font-semibold bg-white/15 text-white shadow-sm transition-all"
+                        >
+                            <span>Local Dashboard</span>
+                        </button>
+                        <Link
+                            href={`/${businessId}/universal`}
+                            className="flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-xs font-medium text-white/50 hover:text-white hover:bg-white/5 transition-all"
+                        >
+                            <span className="text-indigo-400">🌐</span>
+                            <span>Universal Dashboard</span>
+                        </Link>
                     </div>
                 </div>
-                <div className="flex items-center gap-2">
+
+                <div className="flex items-center gap-3">
+                    <Link
+                        href={`/${businessId}/universal`}
+                        className="hidden md:flex items-center gap-1.5 px-3 py-1.5 rounded-lg border border-indigo-500/20 bg-indigo-500/10 hover:bg-indigo-500/20 text-indigo-300 text-xs font-medium transition-colors"
+                    >
+                        <span>View All Businesses</span>
+                        <ChevronRight className="w-3.5 h-3.5" />
+                    </Link>
                     <button className="flex items-center gap-2 border border-white/10 text-white/70 px-3 py-1.5 rounded-lg text-sm font-medium hover:bg-white/5 hover:text-white transition-colors">
                         <Plus className="w-3.5 h-3.5" /> Quick Post
                     </button>

@@ -4,6 +4,7 @@ import { useParams } from 'next/navigation';
 import { MOCK_BUSINESSES } from '@/contexts/AppContext';
 import { Plus, Zap, ArrowRight, Tag } from 'lucide-react';
 import { useState } from 'react';
+import { UniversalDashboardButton } from '@/components/UniversalDashboardButton';
 
 const mockIdeas = [
     { id: '1', title: 'Create TikTok "watch before buying" series for software keys', category: 'Content Hook', impact: 9, confidence: 8, ease: 7, note: 'Showcase value prop as short videos. Low edit time needed.' },
@@ -46,6 +47,9 @@ export default function IdeaVault() {
                 <div>
                     <h1 className="text-base font-semibold text-white">Idea Vault</h1>
                     <p className="text-[11px] text-white/40">{business?.name}</p>
+                </div>
+                <div className="flex items-center gap-3">
+                    <UniversalDashboardButton />
                 </div>
             </header>
 
