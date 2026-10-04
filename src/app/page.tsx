@@ -1,3 +1,5 @@
+'use client';
+
 import { Plus, MoreHorizontal, ArrowUpRight, AlertCircle, Edit2, Play, DollarSign, PenTool, LayoutGrid } from 'lucide-react';
 import Link from 'next/link';
 
