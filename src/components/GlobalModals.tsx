@@ -79,10 +79,31 @@ function AddPostForm({ onClose, addPost, businesses }: any) {
     const [platform, setPlatform] = useState('Instagram');
     const [businessId, setBusinessId] = useState(businesses[0]?.id || '');
     const [date, setDate] = useState(new Date().getDate());
+    const [file, setFile] = useState<File | null>(null);
+    const [uploading, setUploading] = useState(false);
 
-    const submit = (e: any) => {
+    const submit = async (e: any) => {
         e.preventDefault();
-        addPost({ businessId, title, platform, time: '12:00 PM', status: 'draft', date, platformColor: 'bg-indigo-500' });
+        let mediaUrl = null;
+
+        if (file) {
+            setUploading(true);
+            const formData = new FormData();
+            formData.append('file', file);
+            
+            try {
+                const res = await fetch('/api/upload', { method: 'POST', body: formData });
+                const data = await res.json();
+                if (data.success) {
+                    mediaUrl = data.url;
+                }
+            } catch (err) {
+                console.error("Upload failed", err);
+            }
+            setUploading(false);
+        }
+
+        addPost({ businessId, title, platform, time: '12:00 PM', status: 'draft', date, platformColor: 'bg-indigo-500', mediaUrl });
         onClose();
     };
 
@@ -91,6 +112,11 @@ function AddPostForm({ onClose, addPost, businesses }: any) {
             <div>
                 <label className="text-xs font-medium text-white/50 mb-1 block">Post Title</label>
                 <input required value={title} onChange={e => setTitle(e.target.value)} className="w-full bg-white/5 border border-white/10 rounded-lg p-2 text-sm text-white focus:outline-none focus:border-indigo-500" placeholder="e.g. Summer Promo" />
+            </div>
+            <div>
+                <label className="text-xs font-medium text-white/50 mb-1 block">Media Upload</label>
+                <input type="file" onChange={e => setFile(e.target.files?.[0] || null)} className="w-full text-sm text-white/50 file:mr-4 file:py-2 file:px-4 file:rounded-lg file:border-0 file:text-xs file:font-semibold file:bg-white/10 file:text-white hover:file:bg-white/20" />
+                {file && <span className="text-[10px] text-emerald-400 mt-1 block">File selected: {file.name}</span>}
             </div>
             <div className="grid grid-cols-2 gap-4">
                 <div>
@@ -110,7 +136,11 @@ function AddPostForm({ onClose, addPost, businesses }: any) {
                     {businesses.map((b: any) => <option key={b.id} value={b.id}>{b.name}</option>)}
                 </select>
             </div>
-            <button type="submit" className="mt-4 bg-white text-black font-semibold rounded-lg p-2 text-sm hover:bg-white/90">Create Post</button>
+            <button type="submit" disabled={uploading} className="mt-4 bg-white text-black font-semibold rounded-lg p-2 text-sm hover:bg-white/90 disabled:opacity-50 flex justify-center items-center">
+                {uploading ? (
+                    <svg className="animate-spin -ml-1 mr-2 h-4 w-4 text-black" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24"><circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4"></circle><path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path></svg>
+                ) : 'Create Post'}
+            </button>
         </form>
     );
 }
@@ -231,7 +261,7 @@ function AddVendorForm({ onClose, appCtx }: any) {
 }
 
 function AddStockForm({ onClose, appCtx }: any) {
-    const { businesses, addInventoryItem, vendors } = appCtx;
+    const { businesses, addInventoryItem, addTransaction, vendors } = appCtx;
     const [title, setTitle] = useState('');
     const [sku, setSku] = useState('');
     const [price, setPrice] = useState('');
@@ -244,7 +274,21 @@ function AddStockForm({ onClose, appCtx }: any) {
     const submit = (e: any) => {
         e.preventDefault();
         const vendorName = vendors.find((v: any) => v.id === vendorId)?.name || 'Internal';
+        
+        // Add to inventory
         addInventoryItem({ businessId, title, sku, category: 'LICENSE', status: 'AVAILABLE', cost: Number(cost), price: Number(price), vendor: vendorName, payload: 'NEW-ITEM-XXX' });
+        
+        // Log expense in finance (COGS)
+        addTransaction({ 
+            businessId, 
+            type: 'EXPENSE', 
+            description: `Inventory Purchase: ${title} (${vendorName})`, 
+            amount: -Math.abs(Number(cost)), 
+            date: new Date().toISOString().split('T')[0], 
+            ref: sku || 'INV-PURCHASE', 
+            channel: 'COGS' 
+        });
+
         onClose();
     };
 

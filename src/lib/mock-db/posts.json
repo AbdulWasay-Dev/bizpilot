@@ -1,0 +1,6 @@
+[
+    { "id": "p1", "businessId": "glow-skincare", "date": 15, "title": "Summer Sale Promo", "platform": "Instagram", "time": "10:00 AM", "status": "scheduled", "platformColor": "bg-pink-500" },
+    { "id": "p2", "businessId": "glow-skincare", "date": 18, "title": "New Product Teaser", "platform": "TikTok", "time": "2:30 PM", "status": "draft", "platformColor": "bg-cyan-500" },
+    { "id": "p3", "businessId": "techgear", "date": 22, "title": "Founder Q&A", "platform": "Twitter", "time": "1:00 PM", "status": "published", "platformColor": "bg-sky-500" },
+    { "id": "p4", "businessId": "fitness-pro", "date": 25, "title": "Weekly Roundup", "platform": "LinkedIn", "time": "9:00 AM", "status": "scheduled", "platformColor": "bg-blue-600" }
+]

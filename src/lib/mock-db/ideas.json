@@ -1,0 +1,6 @@
+[
+    { "id": "i1", "businessId": "techgear", "title": "Create TikTok \"watch before buying\" series for software keys", "category": "Content Hook", "impact": 9, "confidence": 8, "ease": 7, "note": "Showcase value prop as short videos. Low edit time needed." },
+    { "id": "i2", "businessId": "techgear", "title": "Bundle Office + Windows keys for $99 deal", "category": "Revenue Stream", "impact": 8, "confidence": 7, "ease": 9, "note": "Bundle pricing could improve AOV significantly." },
+    { "id": "i3", "businessId": "glow-skincare", "title": "Auto-send WhatsApp delivery message via template", "category": "Automation", "impact": 7, "confidence": 9, "ease": 5, "note": "Use WA Business API to automate key delivery notification." },
+    { "id": "i4", "businessId": "fitness-pro", "title": "Partner with micro-influencers for affiliate deals", "category": "Marketing Angle", "impact": 9, "confidence": 5, "ease": 4, "note": "Needs outreach. Could be very high ROI if done right." }
+]

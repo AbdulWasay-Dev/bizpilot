@@ -1,0 +1,8 @@
+[
+    { "id": "t1", "businessId": "techgear", "type": "SALE", "description": "Windows 11 Pro Key", "amount": 24.99, "date": "2026-10-04", "ref": "ORD-2841", "channel": "Direct" },
+    { "id": "t2", "businessId": "techgear", "type": "EXPENSE", "description": "Vendor: Alpha Keys (Batch #47)", "amount": -180.00, "date": "2026-10-03", "ref": "INV-0391", "channel": "COGS" },
+    { "id": "t3", "businessId": "techgear", "type": "SALE", "description": "Office 2024 Home & Business", "amount": 89.00, "date": "2026-10-03", "ref": "ORD-2840", "channel": "Direct" },
+    { "id": "t4", "businessId": "glow-skincare", "type": "RETURN", "description": "Refund: Invalid Key \u2014 Customer #C219", "amount": -24.99, "date": "2026-10-02", "ref": "RET-0082", "channel": "Refund" },
+    { "id": "t5", "businessId": "fitness-pro", "type": "EXPENSE", "description": "Hostinger Hosting (Oct)", "amount": -12.00, "date": "2026-10-01", "ref": "SUB-HOST", "channel": "SaaS" },
+    { "id": "t6", "businessId": "techgear", "type": "SALE", "description": "Adobe CC Key (1yr)", "amount": 45.00, "date": "2026-10-01", "ref": "ORD-2839", "channel": "Direct" }
+]

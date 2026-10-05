@@ -1,0 +1,7 @@
+[
+    { "id": "inv1", "businessId": "techgear", "title": "Windows 11 Pro Key", "sku": "WIN11PRO-001", "category": "LICENSE", "status": "AVAILABLE", "cost": 4.50, "price": 24.99, "vendor": "Alpha Keys", "payload": "XXXXX-XXXXX-XXXXX-XXXXX-XXXXX" },
+    { "id": "inv2", "businessId": "techgear", "title": "Office 2024 Home & Business", "sku": "OFF24HB-002", "category": "LICENSE", "status": "AVAILABLE", "cost": 18.00, "price": 89.00, "vendor": "DevStudio Keys", "payload": "AAAAA-BBBBB-CCCCC-DDDDD-EEEEE" },
+    { "id": "inv3", "businessId": "techgear", "title": "Adobe CC 1yr Key", "sku": "ADCC1Y-003", "category": "LICENSE", "status": "SOLD", "cost": 22.00, "price": 45.00, "vendor": "SoftVault", "payload": "" },
+    { "id": "inv4", "businessId": "glow-skincare", "title": "Canva Pro Account", "sku": "CANVAPRO-004", "category": "ACCOUNT", "status": "AVAILABLE", "cost": 3.00, "price": 15.00, "vendor": "AccSupplier", "payload": "user@example.com / P@ssw0rd" },
+    { "id": "inv5", "businessId": "fitness-pro", "title": "Notion Template Pack", "sku": "NOTION-TPL-01", "category": "ASSET", "status": "AVAILABLE", "cost": 0, "price": 12.00, "vendor": "Self-made", "payload": "https://drive.google.com/file/xxx" }
+]
