@@ -1,6 +1,6 @@
 'use client';
 
-import { MOCK_BUSINESSES } from '@/contexts/AppContext';
+import { useApp } from '@/contexts/AppContext';
 import { useParams } from 'next/navigation';
 import Link from 'next/link';
 import {
@@ -37,7 +37,8 @@ const quickLinks = [
 export default function BusinessDashboard() {
     const params = useParams();
     const businessId = params.businessId as string;
-    const business = MOCK_BUSINESSES.find(b => b.id === businessId);
+    const { businesses, setActiveModal } = useApp();
+    const business = businesses.find(b => b.id === businessId);
 
     if (!business) {
         return (
@@ -90,10 +91,10 @@ export default function BusinessDashboard() {
                         <span>View All Businesses</span>
                         <ChevronRight className="w-3.5 h-3.5" />
                     </Link>
-                    <button className="flex items-center gap-2 border border-white/10 text-white/70 px-3 py-1.5 rounded-lg text-sm font-medium hover:bg-white/5 hover:text-white transition-colors">
+                    <button onClick={() => setActiveModal('ADD_POST')} className="flex items-center gap-2 border border-white/10 text-white/70 px-3 py-1.5 rounded-lg text-sm font-medium hover:bg-white/5 hover:text-white transition-colors">
                         <Plus className="w-3.5 h-3.5" /> Quick Post
                     </button>
-                    <button className="flex items-center gap-2 border border-white/10 text-white/70 px-3 py-1.5 rounded-lg text-sm font-medium hover:bg-white/5 hover:text-white transition-colors">
+                    <button onClick={() => setActiveModal('LOG_SALE')} className="flex items-center gap-2 border border-white/10 text-white/70 px-3 py-1.5 rounded-lg text-sm font-medium hover:bg-white/5 hover:text-white transition-colors">
                         <Plus className="w-3.5 h-3.5" /> Log Sale
                     </button>
                 </div>

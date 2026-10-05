@@ -7,20 +7,24 @@ import {
     Brain, Lightbulb, ChevronDown, Settings, Check, Plus
 } from 'lucide-react';
 import { useState } from 'react';
-import { MOCK_BUSINESSES } from '@/contexts/AppContext';
+import { useApp } from '@/contexts/AppContext';
 
 export function Sidebar() {
     const pathname = usePathname();
     const params = useParams();
     const router = useRouter();
     const [switcherOpen, setSwitcherOpen] = useState(false);
+    
+    const { businesses, setActiveModal } = useApp();
 
     // Active workspace identity is always a business
-    const activeBusinessId = (params?.businessId as string) || MOCK_BUSINESSES[0].id;
-    const currentBusiness = MOCK_BUSINESSES.find(b => b.id === activeBusinessId) || MOCK_BUSINESSES[0];
+    const activeBusinessId = (params?.businessId as string) || businesses[0]?.id;
+    const currentBusiness = businesses.find(b => b.id === activeBusinessId) || businesses[0];
+
+    if (!currentBusiness) return null; // Fallback if no businesses
 
     const isNeglected = currentBusiness.metrics.neglectScore < 50;
-    const neglectedCount = MOCK_BUSINESSES.filter(b => b.metrics.neglectScore < 50).length;
+    const neglectedCount = businesses.filter(b => b.metrics.neglectScore < 50).length;
 
     // Switch business while preserving the current submodule if possible
     const handleSwitchBusiness = (newBusinessId: string) => {
@@ -53,7 +57,7 @@ export function Sidebar() {
             href: `/${activeBusinessId}/universal`,
             icon: Globe,
             accent: 'text-indigo-400',
-            badge: `${MOCK_BUSINESSES.length} Biz`,
+            badge: `${businesses.length} Biz`,
             alertCount: neglectedCount > 0 ? neglectedCount : undefined,
             isActive: pathname?.endsWith('/universal') || false,
         },
@@ -133,7 +137,7 @@ export function Sidebar() {
 
                         {/* List of Businesses (Workspaces) */}
                         <div className="p-1 space-y-0.5">
-                            {MOCK_BUSINESSES.map(b => {
+                            {businesses.map(b => {
                                 const isSelected = b.id === activeBusinessId;
                                 const bNeglected = b.metrics.neglectScore < 50;
                                 return (
@@ -160,7 +164,7 @@ export function Sidebar() {
 
                         <div className="p-1 border-t border-white/[0.06]">
                             <button
-                                onClick={() => { setSwitcherOpen(false); alert('New business creation wizard coming soon.'); }}
+                                onClick={() => { setSwitcherOpen(false); setActiveModal('ADD_BUSINESS'); }}
                                 className="w-full flex items-center gap-2 p-2 rounded-lg text-xs font-medium text-white/50 hover:text-white hover:bg-white/5 transition-colors"
                             >
                                 <Plus className="w-3.5 h-3.5" />

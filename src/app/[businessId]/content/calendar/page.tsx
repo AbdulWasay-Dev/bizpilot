@@ -2,7 +2,7 @@
 
 import { useState } from 'react';
 import { useParams } from 'next/navigation';
-import { MOCK_BUSINESSES } from '@/contexts/AppContext';
+import { useApp } from '@/contexts/AppContext';
 import { 
     ChevronLeft, 
     ChevronRight, 
@@ -16,16 +16,14 @@ import { UniversalDashboardButton } from '@/components/UniversalDashboardButton'
 
 // Mock Data for the Calendar
 const daysOfWeek = ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'];
-const mockPosts = [
-    { id: 1, date: 15, title: 'Summer Sale Promo', platform: 'Instagram', time: '10:00 AM', status: 'scheduled', platformColor: 'bg-pink-500' },
-    { id: 2, date: 18, title: 'New Product Teaser', platform: 'TikTok', time: '2:30 PM', status: 'draft', platformColor: 'bg-cyan-500' },
-    { id: 3, date: 22, title: 'Founder Q&A', platform: 'Twitter', time: '1:00 PM', status: 'published', platformColor: 'bg-sky-500' },
-    { id: 4, date: 25, title: 'Weekly Roundup', platform: 'LinkedIn', time: '9:00 AM', status: 'scheduled', platformColor: 'bg-blue-600' },
-];
 
 export default function ContentStudio() {
     const { businessId } = useParams() as { businessId: string };
-    const business = MOCK_BUSINESSES.find(b => b.id === businessId);
+    const { businesses, posts, addPost } = useApp();
+    const business = businesses.find(b => b.id === businessId);
+    
+    // Filter posts for this business
+    const businessPosts = posts.filter(p => p.businessId === businessId);
     const [view, setView] = useState<'month' | 'week'>('month');
     const [isCreatorOpen, setIsCreatorOpen] = useState(false);
     const [caption, setCaption] = useState('');
@@ -98,7 +96,7 @@ export default function ContentStudio() {
                                 const date = i - 2; // Offset for starting day
                                 const isCurrentMonth = date > 0 && date <= 31;
                                 const isToday = date === 15;
-                                const dayPosts = mockPosts.filter(p => p.date === date);
+                                const dayPosts = businessPosts.filter(p => p.date === date);
 
                                 return (
                                     <div 
@@ -212,10 +210,28 @@ export default function ContentStudio() {
 
                 {/* Footer Actions */}
                 <div className="p-6 border-t border-white/10 bg-black/20 shrink-0 space-y-3">
-                    <button className="w-full py-3 rounded-lg bg-indigo-500 hover:bg-indigo-600 text-white text-sm font-semibold transition-colors shadow-lg shadow-indigo-500/20">
+                    <button 
+                        onClick={() => {
+                            if (caption) {
+                                addPost({ businessId, title: caption.substring(0, 20) + '...', platform: 'Instagram', time: '12:00 PM', status: 'scheduled', date: new Date().getDate(), platformColor: 'bg-pink-500' });
+                                setCaption('');
+                                setIsCreatorOpen(false);
+                            }
+                        }}
+                        className="w-full py-3 rounded-lg bg-indigo-500 hover:bg-indigo-600 text-white text-sm font-semibold transition-colors shadow-lg shadow-indigo-500/20"
+                    >
                         Schedule Post
                     </button>
-                    <button className="w-full py-3 rounded-lg border border-white/10 text-white hover:bg-white/5 text-sm font-medium transition-colors">
+                    <button 
+                        onClick={() => {
+                            if (caption) {
+                                addPost({ businessId, title: caption.substring(0, 20) + '...', platform: 'Instagram', time: '12:00 PM', status: 'draft', date: new Date().getDate(), platformColor: 'bg-pink-500' });
+                                setCaption('');
+                                setIsCreatorOpen(false);
+                            }
+                        }}
+                        className="w-full py-3 rounded-lg border border-white/10 text-white hover:bg-white/5 text-sm font-medium transition-colors"
+                    >
                         Save as Draft
                     </button>
                 </div>

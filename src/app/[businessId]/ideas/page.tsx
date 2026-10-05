@@ -1,17 +1,10 @@
 'use client';
 
 import { useParams } from 'next/navigation';
-import { MOCK_BUSINESSES } from '@/contexts/AppContext';
+import { useApp } from '@/contexts/AppContext';
 import { Plus, Zap, ArrowRight, Tag } from 'lucide-react';
 import { useState } from 'react';
 import { UniversalDashboardButton } from '@/components/UniversalDashboardButton';
-
-const mockIdeas = [
-    { id: '1', title: 'Create TikTok "watch before buying" series for software keys', category: 'Content Hook', impact: 9, confidence: 8, ease: 7, note: 'Showcase value prop as short videos. Low edit time needed.' },
-    { id: '2', title: 'Bundle Office + Windows keys for $99 deal', category: 'Revenue Stream', impact: 8, confidence: 7, ease: 9, note: 'Bundle pricing could improve AOV significantly.' },
-    { id: '3', title: 'Auto-send WhatsApp delivery message via template', category: 'Automation', impact: 7, confidence: 9, ease: 5, note: 'Use WA Business API to automate key delivery notification.' },
-    { id: '4', title: 'Partner with micro-influencers for affiliate deals', category: 'Marketing Angle', impact: 9, confidence: 5, ease: 4, note: 'Needs outreach. Could be very high ROI if done right.' },
-];
 
 const categoryColors: Record<string, string> = {
     'Content Hook': 'text-pink-400 bg-pink-400/10',
@@ -20,6 +13,7 @@ const categoryColors: Record<string, string> = {
     'Marketing Angle': 'text-purple-400 bg-purple-400/10',
     'Product Sourcing': 'text-cyan-400 bg-cyan-400/10',
     'Cost-cutting': 'text-amber-400 bg-amber-400/10',
+    'Other': 'text-white/60 bg-white/5',
 };
 
 function IceBar({ label, value }: { label: string; value: number }) {
@@ -36,10 +30,14 @@ function IceBar({ label, value }: { label: string; value: number }) {
 
 export default function IdeaVault() {
     const { businessId } = useParams() as { businessId: string };
-    const business = MOCK_BUSINESSES.find(b => b.id === businessId);
+    const { businesses, ideas, addIdea } = useApp();
+    const business = businesses.find(b => b.id === businessId);
+    
+    // Filter ideas for this business
+    const businessIdeas = ideas.filter(i => i.businessId === businessId);
     const [newIdea, setNewIdea] = useState('');
 
-    const ranked = [...mockIdeas].sort((a, b) => (b.impact * b.confidence * b.ease) - (a.impact * a.confidence * a.ease));
+    const ranked = [...businessIdeas].sort((a, b) => (b.impact * b.confidence * b.ease) - (a.impact * a.confidence * a.ease));
 
     return (
         <div className="min-h-screen bg-[#0a0a0a]">
@@ -67,7 +65,13 @@ export default function IdeaVault() {
                         />
                         {newIdea.trim() && (
                             <div className="flex gap-2 mt-3">
-                                <button className="px-3 py-1.5 bg-amber-400/10 border border-amber-400/20 text-amber-400 text-xs font-semibold rounded-lg hover:bg-amber-400/20 transition-colors">
+                                <button 
+                                    onClick={() => {
+                                        addIdea({ businessId, title: newIdea, category: 'Other', impact: 5, confidence: 5, ease: 5, note: '' });
+                                        setNewIdea('');
+                                    }}
+                                    className="px-3 py-1.5 bg-amber-400/10 border border-amber-400/20 text-amber-400 text-xs font-semibold rounded-lg hover:bg-amber-400/20 transition-colors"
+                                >
                                     Save Idea
                                 </button>
                                 <button onClick={() => setNewIdea('')} className="text-xs text-white/40 hover:text-white transition-colors px-3 py-1.5">Cancel</button>

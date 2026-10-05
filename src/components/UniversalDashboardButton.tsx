@@ -3,12 +3,13 @@
 import Link from 'next/link';
 import { Globe } from 'lucide-react';
 import { useParams } from 'next/navigation';
-import { MOCK_BUSINESSES } from '@/contexts/AppContext';
+import { useApp } from '@/contexts/AppContext';
 
 export function UniversalDashboardButton() {
     const params = useParams();
-    const businessId = (params?.businessId as string) || MOCK_BUSINESSES[0].id;
-    const neglectedCount = MOCK_BUSINESSES.filter(b => b.metrics.neglectScore < 50).length;
+    const { businesses } = useApp();
+    const businessId = (params?.businessId as string) || businesses[0]?.id;
+    const neglectedCount = businesses.filter(b => b.metrics.neglectScore < 50).length;
 
     return (
         <Link

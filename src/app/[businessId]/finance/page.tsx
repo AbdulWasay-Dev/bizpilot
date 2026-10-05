@@ -1,27 +1,12 @@
 'use client';
 
 import { useParams } from 'next/navigation';
-import { MOCK_BUSINESSES } from '@/contexts/AppContext';
+import { useApp } from '@/contexts/AppContext';
 import {
     Plus, TrendingUp, ArrowDownLeft, Package, DollarSign,
     FileText, Receipt, ChevronRight, ExternalLink
 } from 'lucide-react';
 import { UniversalDashboardButton } from '@/components/UniversalDashboardButton';
-
-const mockTransactions = [
-    { id: '1', type: 'SALE', description: 'Windows 11 Pro Key', amount: 24.99, date: '2026-10-04', ref: 'ORD-2841', channel: 'Direct' },
-    { id: '2', type: 'EXPENSE', description: 'Vendor: Alpha Keys (Batch #47)', amount: -180.00, date: '2026-10-03', ref: 'INV-0391', channel: 'COGS' },
-    { id: '3', type: 'SALE', description: 'Office 2024 Home & Business', amount: 89.00, date: '2026-10-03', ref: 'ORD-2840', channel: 'Direct' },
-    { id: '4', type: 'RETURN', description: 'Refund: Invalid Key — Customer #C219', amount: -24.99, date: '2026-10-02', ref: 'RET-0082', channel: 'Refund' },
-    { id: '5', type: 'EXPENSE', description: 'Hostinger Hosting (Oct)', amount: -12.00, date: '2026-10-01', ref: 'SUB-HOST', channel: 'SaaS' },
-    { id: '6', type: 'SALE', description: 'Adobe CC Key (1yr)', amount: 45.00, date: '2026-10-01', ref: 'ORD-2839', channel: 'Direct' },
-];
-
-const grossSales = mockTransactions.filter(t => t.type === 'SALE').reduce((s, t) => s + t.amount, 0);
-const returns = mockTransactions.filter(t => t.type === 'RETURN').reduce((s, t) => s + t.amount, 0);
-const expenses = mockTransactions.filter(t => t.type === 'EXPENSE').reduce((s, t) => s + t.amount, 0);
-const netProfit = grossSales + returns + expenses;
-const margin = Math.round((netProfit / (grossSales + returns)) * 100);
 
 function KpiTile({ label, value, sub, positive }: { label: string; value: string; sub?: string; positive?: boolean }) {
     return (
@@ -35,7 +20,16 @@ function KpiTile({ label, value, sub, positive }: { label: string; value: string
 
 export default function FinanceLedger() {
     const { businessId } = useParams() as { businessId: string };
-    const business = MOCK_BUSINESSES.find(b => b.id === businessId);
+    const { businesses, transactions, setActiveModal } = useApp();
+    const business = businesses.find(b => b.id === businessId);
+
+    const businessTransactions = transactions.filter(t => t.businessId === businessId);
+
+    const grossSales = businessTransactions.filter(t => t.type === 'SALE').reduce((s, t) => s + t.amount, 0);
+    const returns = businessTransactions.filter(t => t.type === 'RETURN').reduce((s, t) => s + t.amount, 0);
+    const expenses = businessTransactions.filter(t => t.type === 'EXPENSE').reduce((s, t) => s + t.amount, 0);
+    const netProfit = grossSales + returns + expenses;
+    const margin = grossSales + returns > 0 ? Math.round((netProfit / (grossSales + returns)) * 100) : 0;
 
     return (
         <div className="min-h-screen bg-[#0a0a0a]">
@@ -46,10 +40,10 @@ export default function FinanceLedger() {
                 </div>
                 <div className="flex items-center gap-3">
                     <UniversalDashboardButton />
-                    <button className="flex items-center gap-2 border border-white/10 text-white/70 px-3 py-1.5 rounded-lg text-sm font-medium hover:bg-white/5 hover:text-white transition-colors">
+                    <button onClick={() => setActiveModal('LOG_SALE')} className="flex items-center gap-2 border border-white/10 text-white/70 px-3 py-1.5 rounded-lg text-sm font-medium hover:bg-white/5 hover:text-white transition-colors">
                         <Plus className="w-3.5 h-3.5" /> Log Sale
                     </button>
-                    <button className="flex items-center gap-2 border border-white/10 text-white/70 px-3 py-1.5 rounded-lg text-sm font-medium hover:bg-white/5 hover:text-white transition-colors">
+                    <button onClick={() => setActiveModal('ADD_EXPENSE')} className="flex items-center gap-2 border border-white/10 text-white/70 px-3 py-1.5 rounded-lg text-sm font-medium hover:bg-white/5 hover:text-white transition-colors">
                         <Plus className="w-3.5 h-3.5" /> Add Expense
                     </button>
                 </div>
@@ -60,8 +54,8 @@ export default function FinanceLedger() {
                 <div className="grid grid-cols-2 lg:grid-cols-4 gap-4">
                     <KpiTile label="Gross Sales" value={`$${grossSales.toFixed(2)}`} sub="Before returns" positive={true} />
                     <KpiTile label="Returns / Refunds" value={`$${returns.toFixed(2)}`} sub="Deducted from revenue" positive={false} />
-                    <KpiTile label="Total Expenses" value={`$${expenses.toFixed(2)}`} sub="COGS + Overheads" positive={false} />
-                    <KpiTile label="Net Profit" value={`$${netProfit.toFixed(2)}`} sub={`${margin}% margin`} positive={netProfit > 0} />
+                    <KpiTile label="Total Expenses" value={`$${Math.abs(expenses).toFixed(2)}`} sub="COGS + Overheads" positive={false} />
+                    <KpiTile label="Net Profit" value={`$${netProfit.toFixed(2)}`} sub={`${margin}% margin`} positive={netProfit >= 0} />
                 </div>
 
                 {/* Transaction log */}
@@ -75,7 +69,7 @@ export default function FinanceLedger() {
                         </div>
                     </div>
                     <div className="divide-y divide-white/[0.04]">
-                        {mockTransactions.map(tx => (
+                        {businessTransactions.map(tx => (
                             <div key={tx.id} className="px-6 py-4 flex items-center gap-4 hover:bg-white/[0.02] transition-colors">
                                 <div className={`p-2 rounded-lg shrink-0 ${
                                     tx.type === 'SALE' ? 'bg-emerald-500/10' :
@@ -94,6 +88,11 @@ export default function FinanceLedger() {
                                 </span>
                             </div>
                         ))}
+                        {businessTransactions.length === 0 && (
+                            <div className="px-6 py-8 text-center text-white/40 text-sm">
+                                No transactions recorded yet.
+                            </div>
+                        )}
                     </div>
                 </div>
             </main>

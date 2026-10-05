@@ -1,36 +1,10 @@
 'use client';
 
 import { useParams } from 'next/navigation';
-import { MOCK_BUSINESSES } from '@/contexts/AppContext';
+import { useApp } from '@/contexts/AppContext';
 import { Plus, AlertTriangle, CheckCircle2, Clock, MoreHorizontal } from 'lucide-react';
 import { useState } from 'react';
 import { UniversalDashboardButton } from '@/components/UniversalDashboardButton';
-
-const mockDecisions = [
-    {
-        id: '1', title: 'Switch to annual vendor contract with Alpha Keys',
-        status: 'IN_DELIBERATION', urgency: 'High', impact: 'High',
-        context: 'Alpha Keys is offering 20% discount on annual bulk contract. We currently buy monthly.',
-        chosen: '', deadline: '2026-10-15', kpi: 'Reduce COGS by 15% within 60 days.',
-        outcomeRating: null, createdAt: '2026-10-01',
-    },
-    {
-        id: '2', title: 'Launch TikTok shop integration',
-        status: 'DECIDED', urgency: 'Medium', impact: 'High',
-        context: 'TikTok Shop now supports digital goods in our region. Could open new sales channel.',
-        chosen: 'Proceed with TikTok Shop integration in Q4.',
-        deadline: '2026-11-01', kpi: '50+ orders via TikTok Shop within 60 days of launch.',
-        outcomeRating: null, createdAt: '2026-09-20',
-    },
-    {
-        id: '3', title: 'Hire part-time content editor',
-        status: 'ARCHIVED', urgency: 'Low', impact: 'Medium',
-        context: 'Content creation taking 3+ hours daily. Outsourcing considered.',
-        chosen: 'Decided against — will use templates and batching instead.',
-        deadline: '2026-09-01', kpi: 'Reduce content time to 1h/day.',
-        outcomeRating: 4, createdAt: '2026-08-15',
-    },
-];
 
 const statusConfig: Record<string, { label: string; color: string; icon: any }> = {
     IN_DELIBERATION: { label: 'In Deliberation', color: 'text-amber-400 bg-amber-400/10 border-amber-400/20', icon: Clock },
@@ -45,7 +19,11 @@ const urgencyColors: Record<string, string> = {
 
 export default function DecisionLog() {
     const { businessId } = useParams() as { businessId: string };
-    const business = MOCK_BUSINESSES.find(b => b.id === businessId);
+    const { businesses, decisions, setActiveModal } = useApp();
+    const business = businesses.find(b => b.id === businessId);
+    
+    // Filter decisions for this business
+    const businessDecisions = decisions.filter(d => d.businessId === businessId);
 
     return (
         <div className="min-h-screen bg-[#0a0a0a]">
@@ -56,14 +34,14 @@ export default function DecisionLog() {
                 </div>
                 <div className="flex items-center gap-3">
                     <UniversalDashboardButton />
-                    <button className="flex items-center gap-2 bg-indigo-500/10 border border-indigo-500/20 text-indigo-400 px-4 py-2 rounded-lg text-sm font-medium hover:bg-indigo-500/20 transition-colors">
+                    <button onClick={() => setActiveModal('NEW_DECISION')} className="flex items-center gap-2 bg-indigo-500/10 border border-indigo-500/20 text-indigo-400 px-4 py-2 rounded-lg text-sm font-medium hover:bg-indigo-500/20 transition-colors">
                         <Plus className="w-4 h-4" /> New Decision
                     </button>
                 </div>
             </header>
 
             <main className="p-8 max-w-4xl mx-auto space-y-4">
-                {mockDecisions.map(d => {
+                {businessDecisions.map(d => {
                     const sc = statusConfig[d.status] ?? statusConfig.ARCHIVED;
                     const Icon = sc.icon;
                     return (

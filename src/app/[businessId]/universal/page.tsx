@@ -1,7 +1,7 @@
 'use client';
 
 import { useParams, useRouter } from 'next/navigation';
-import { MOCK_BUSINESSES, Business } from '@/contexts/AppContext';
+import { useApp } from '@/contexts/AppContext';
 import {
     TrendingUp, Package, Image as ImageIcon, Flame, AlertCircle,
     ChevronRight, Plus, ArrowUpRight, DollarSign, PenTool,
@@ -31,15 +31,18 @@ function StatusBadge({ current, target }: { current: number; target: number }) {
 export default function UniversalDashboardPage() {
     const params = useParams();
     const router = useRouter();
-    const activeBusinessId = (params?.businessId as string) || MOCK_BUSINESSES[0].id;
-    const currentBusiness = MOCK_BUSINESSES.find(b => b.id === activeBusinessId) || MOCK_BUSINESSES[0];
+    const { businesses, setActiveModal } = useApp();
+    const activeBusinessId = (params?.businessId as string) || businesses[0]?.id;
+    const currentBusiness = businesses.find(b => b.id === activeBusinessId) || businesses[0];
 
-    const totalRevenue = MOCK_BUSINESSES.reduce((s, b) => s + b.metrics.revenueMonth, 0);
-    const totalPosts = MOCK_BUSINESSES.reduce((s, b) => s + b.metrics.postsWeek, 0);
-    const totalTargetPosts = MOCK_BUSINESSES.reduce((s, b) => s + b.metrics.targetPostsWeek, 0);
-    const totalItemsSold = MOCK_BUSINESSES.reduce((s, b) => s + b.metrics.itemsSold, 0);
-    const bestStreak = Math.max(...MOCK_BUSINESSES.map(b => b.metrics.streak));
-    const neglectedBusinesses = MOCK_BUSINESSES.filter(b => b.metrics.neglectScore < 50);
+    if (!currentBusiness) return null;
+
+    const totalRevenue = businesses.reduce((s, b) => s + b.metrics.revenueMonth, 0);
+    const totalPosts = businesses.reduce((s, b) => s + b.metrics.postsWeek, 0);
+    const totalTargetPosts = businesses.reduce((s, b) => s + b.metrics.targetPostsWeek, 0);
+    const totalItemsSold = businesses.reduce((s, b) => s + b.metrics.itemsSold, 0);
+    const bestStreak = Math.max(...businesses.map(b => b.metrics.streak));
+    const neglectedBusinesses = businesses.filter(b => b.metrics.neglectScore < 50);
 
     const [notificationFilter, setNotificationFilter] = useState<'all' | 'alerts' | 'milestones'>('all');
 
@@ -126,13 +129,13 @@ export default function UniversalDashboardPage() {
 
                 <div className="flex items-center gap-3">
                     <button
-                        onClick={() => router.push(`/${activeBusinessId}/content`)}
+                        onClick={() => setActiveModal('ADD_POST')}
                         className="flex items-center gap-2 bg-indigo-500/10 border border-indigo-500/20 text-indigo-300 hover:text-white hover:bg-indigo-500/20 px-3.5 py-1.5 rounded-lg text-xs font-medium transition-colors"
                     >
                         <Plus className="w-3.5 h-3.5" /> Quick Post
                     </button>
                     <button
-                        onClick={() => router.push(`/${activeBusinessId}/finance`)}
+                        onClick={() => setActiveModal('LOG_SALE')}
                         className="flex items-center gap-2 bg-emerald-500/10 border border-emerald-500/20 text-emerald-300 hover:text-white hover:bg-emerald-500/20 px-3.5 py-1.5 rounded-lg text-xs font-medium transition-colors"
                     >
                         <DollarSign className="w-3.5 h-3.5" /> Log Sale
@@ -287,7 +290,7 @@ export default function UniversalDashboardPage() {
                     </div>
 
                     <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-5">
-                        {MOCK_BUSINESSES.map(b => {
+                        {businesses.map(b => {
                             const isNeglected = b.metrics.neglectScore < 50;
                             const isCurrent = b.id === activeBusinessId;
                             const pctPosts = Math.round((b.metrics.postsWeek / b.metrics.targetPostsWeek) * 100);
@@ -429,7 +432,7 @@ export default function UniversalDashboardPage() {
                             </h2>
                         </div>
                         <div className="space-y-4">
-                            {MOCK_BUSINESSES.map(b => {
+                            {businesses.map(b => {
                                 const pct = Math.round((b.metrics.postsWeek / b.metrics.targetPostsWeek) * 100);
                                 return (
                                     <div key={b.id} className="space-y-1.5">
@@ -462,7 +465,7 @@ export default function UniversalDashboardPage() {
 
                         {/* Multi-segment progress bar */}
                         <div className="w-full h-3 rounded-full overflow-hidden flex bg-white/5 mb-4">
-                            {MOCK_BUSINESSES.map(b => {
+                            {businesses.map(b => {
                                 const pct = (b.metrics.revenueMonth / totalRevenue) * 100;
                                 return (
                                     <div
@@ -476,7 +479,7 @@ export default function UniversalDashboardPage() {
                         </div>
 
                         <div className="space-y-2.5">
-                            {MOCK_BUSINESSES.map(b => {
+                            {businesses.map(b => {
                                 const pct = Math.round((b.metrics.revenueMonth / totalRevenue) * 100);
                                 return (
                                     <div key={b.id} className="flex items-center justify-between text-xs p-2 rounded-lg bg-white/[0.02]">
