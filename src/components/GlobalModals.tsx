@@ -342,7 +342,7 @@ function AddDecisionForm({ onClose, addDecision, businesses }: any) {
 
     const submit = (e: any) => {
         e.preventDefault();
-        addDecision({ businessId, title, status: 'IN_DELIBERATION', urgency, impact: 'Medium', context: '', chosen: '', deadline: new Date().toISOString().split('T')[0], kpi: '', outcomeRating: null, createdAt: new Date().toISOString().split('T')[0] });
+        addDecision({ businessId, title, status: 'IN_DELIBERATION', urgency, impact: 'Medium', context: '', chosen: '', deadline: new Date().toISOString().split('T')[0], kpi: '', outcomeRating: null });
         onClose();
     };
 

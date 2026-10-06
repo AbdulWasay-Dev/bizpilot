@@ -1,112 +1,110 @@
 'use client';
 
-import { createContext, useContext, useState, ReactNode } from 'react';
+import { createContext, useContext, useState, ReactNode, useEffect } from 'react';
 import { 
-    Business, MOCK_BUSINESSES,
-    Post, MOCK_POSTS,
-    Idea, MOCK_IDEAS,
-    Transaction, MOCK_TRANSACTIONS,
-    InventoryItem, MOCK_INVENTORY,
-    Decision, MOCK_DECISIONS,
-    Vendor, MOCK_VENDORS,
-    SocialAccount, MOCK_SOCIAL_ACCOUNTS
+    Business, Post, Idea, Transaction, InventoryItem, Decision, Vendor, SocialAccount 
 } from '@/lib/data';
+
+// Import server actions
+import {
+    createBusiness, createPost, createIdea, createTransaction, 
+    createInventoryItem, updateInventoryItemDB, createDecision, 
+    createVendor, createSocialAccount
+} from '@/app/db-actions';
 
 export type { Business, Post, Idea, Transaction, InventoryItem, Decision, Vendor, SocialAccount };
 
 export type ModalType = 'ADD_BUSINESS' | 'ADD_POST' | 'LOG_SALE' | 'ADD_EXPENSE' | 'ADD_STOCK' | 'NEW_DECISION' | 'ADD_VENDOR' | 'ADD_SOCIAL_ACCOUNT' | null;
 
-type AppContextType = {
+type InitialData = {
     businesses: Business[];
-    addBusiness: (b: Omit<Business, 'id' | 'metrics'>) => void;
-    
     posts: Post[];
-    addPost: (p: Omit<Post, 'id'>) => void;
-    
     ideas: Idea[];
-    addIdea: (i: Omit<Idea, 'id'>) => void;
-    
     transactions: Transaction[];
-    addTransaction: (t: Omit<Transaction, 'id'>) => void;
-    
     inventory: InventoryItem[];
+    decisions: Decision[];
+    vendors: Vendor[];
+    socialAccounts: SocialAccount[];
+};
+
+type AppContextType = InitialData & {
+    addBusiness: (b: Omit<Business, 'id' | 'metrics'>) => void;
+    addPost: (p: Omit<Post, 'id'>) => void;
+    addIdea: (i: Omit<Idea, 'id'>) => void;
+    addTransaction: (t: Omit<Transaction, 'id'>) => void;
     addInventoryItem: (i: Omit<InventoryItem, 'id'>) => void;
     updateInventoryItem: (id: string, updates: Partial<InventoryItem>) => void;
-    
-    decisions: Decision[];
     addDecision: (d: Omit<Decision, 'id'>) => void;
-
-    vendors: Vendor[];
     addVendor: (v: Omit<Vendor, 'id'>) => void;
-
-    socialAccounts: SocialAccount[];
     addSocialAccount: (s: Omit<SocialAccount, 'id'>) => void;
-
     activeModal: ModalType;
     setActiveModal: (m: ModalType) => void;
 };
 
-const AppContext = createContext<AppContextType>({
-    businesses: MOCK_BUSINESSES,
-    addBusiness: () => {},
-    
-    posts: MOCK_POSTS,
-    addPost: () => {},
-    
-    ideas: MOCK_IDEAS,
-    addIdea: () => {},
-    
-    transactions: MOCK_TRANSACTIONS,
-    addTransaction: () => {},
-    
-    inventory: MOCK_INVENTORY,
-    addInventoryItem: () => {},
-    updateInventoryItem: () => {},
-    
-    decisions: MOCK_DECISIONS,
-    addDecision: () => {},
+const AppContext = createContext<AppContextType | null>(null);
 
-    vendors: MOCK_VENDORS,
-    addVendor: () => {},
-
-    socialAccounts: MOCK_SOCIAL_ACCOUNTS,
-    addSocialAccount: () => {},
-
-    activeModal: null,
-    setActiveModal: () => {},
-});
-
-export function AppProvider({ children }: { children: ReactNode }) {
-    const [businesses, setBusinesses] = useState<Business[]>(MOCK_BUSINESSES);
-    const [posts, setPosts] = useState<Post[]>(MOCK_POSTS);
-    const [ideas, setIdeas] = useState<Idea[]>(MOCK_IDEAS);
-    const [transactions, setTransactions] = useState<Transaction[]>(MOCK_TRANSACTIONS);
-    const [inventory, setInventory] = useState<InventoryItem[]>(MOCK_INVENTORY);
-    const [decisions, setDecisions] = useState<Decision[]>(MOCK_DECISIONS);
-    const [vendors, setVendors] = useState<Vendor[]>(MOCK_VENDORS);
-    const [socialAccounts, setSocialAccounts] = useState<SocialAccount[]>(MOCK_SOCIAL_ACCOUNTS);
+export function AppProvider({ children, initialData }: { children: ReactNode, initialData: InitialData }) {
+    const [businesses, setBusinesses] = useState<Business[]>(initialData.businesses);
+    const [posts, setPosts] = useState<Post[]>(initialData.posts);
+    const [ideas, setIdeas] = useState<Idea[]>(initialData.ideas);
+    const [transactions, setTransactions] = useState<Transaction[]>(initialData.transactions);
+    const [inventory, setInventory] = useState<InventoryItem[]>(initialData.inventory);
+    const [decisions, setDecisions] = useState<Decision[]>(initialData.decisions);
+    const [vendors, setVendors] = useState<Vendor[]>(initialData.vendors);
+    const [socialAccounts, setSocialAccounts] = useState<SocialAccount[]>(initialData.socialAccounts);
     const [activeModal, setActiveModal] = useState<ModalType>(null);
 
-    const generateId = () => Math.random().toString(36).substr(2, 9);
+    // Sync state if initialData changes (e.g. after a revalidation)
+    useEffect(() => {
+        setBusinesses(initialData.businesses);
+        setPosts(initialData.posts);
+        setIdeas(initialData.ideas);
+        setTransactions(initialData.transactions);
+        setInventory(initialData.inventory);
+        setDecisions(initialData.decisions);
+        setVendors(initialData.vendors);
+        setSocialAccounts(initialData.socialAccounts);
+    }, [initialData]);
 
-    const addBusiness = (b: Omit<Business, 'id' | 'metrics'>) => {
-        setBusinesses([...businesses, { 
-            ...b, 
-            id: generateId(),
-            metrics: { revenueMonth: 0, itemsSold: 0, postsWeek: 0, targetPostsWeek: 5, streak: 0, neglectScore: 100, lastActivity: 'Just now' }
-        }]);
+    const addBusiness = async (b: Omit<Business, 'id' | 'metrics'>) => {
+        // Optimistic UI update could be added, but for DB sync we just call the server action
+        // which will revalidate and trigger a re-render with new initialData.
+        await createBusiness(b);
     };
 
-    const addPost = (p: Omit<Post, 'id'>) => setPosts([...posts, { ...p, id: generateId() }]);
-    const addIdea = (i: Omit<Idea, 'id'>) => setIdeas([...ideas, { ...i, id: generateId() }]);
-    const addTransaction = (t: Omit<Transaction, 'id'>) => setTransactions([...transactions, { ...t, id: generateId() }]);
-    const addInventoryItem = (i: Omit<InventoryItem, 'id'>) => setInventory([...inventory, { ...i, id: generateId() }]);
-    const updateInventoryItem = (id: string, updates: Partial<InventoryItem>) => {
-        setInventory(inventory.map(item => item.id === id ? { ...item, ...updates } : item));
+    const addPost = async (p: Omit<Post, 'id'>) => {
+        await createPost(p);
     };
-    const addDecision = (d: Omit<Decision, 'id'>) => setDecisions([...decisions, { ...d, id: generateId() }]);
-    const addVendor = (v: Omit<Vendor, 'id'>) => setVendors([...vendors, { ...v, id: generateId() }]);
-    const addSocialAccount = (s: Omit<SocialAccount, 'id'>) => setSocialAccounts([...socialAccounts, { ...s, id: generateId() }]);
+
+    const addIdea = async (i: Omit<Idea, 'id'>) => {
+        await createIdea(i);
+    };
+
+    const addTransaction = async (t: Omit<Transaction, 'id'>) => {
+        await createTransaction(t);
+    };
+
+    const addInventoryItem = async (i: Omit<InventoryItem, 'id'>) => {
+        // Transform the object if needed, ensure DB types match
+        // Payload might be missing or JSON
+        await createInventoryItem(i);
+    };
+
+    const updateInventoryItem = async (id: string, updates: Partial<InventoryItem>) => {
+        await updateInventoryItemDB(id, updates);
+    };
+
+    const addDecision = async (d: Omit<Decision, 'id'>) => {
+        await createDecision(d);
+    };
+
+    const addVendor = async (v: Omit<Vendor, 'id'>) => {
+        await createVendor(v);
+    };
+
+    const addSocialAccount = async (s: Omit<SocialAccount, 'id'>) => {
+        await createSocialAccount(s);
+    };
 
     return (
         <AppContext.Provider value={{ 
@@ -125,4 +123,8 @@ export function AppProvider({ children }: { children: ReactNode }) {
     );
 }
 
-export const useApp = () => useContext(AppContext);
+export const useApp = () => {
+    const ctx = useContext(AppContext);
+    if (!ctx) throw new Error("useApp must be used within AppProvider");
+    return ctx;
+};

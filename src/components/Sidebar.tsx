@@ -33,7 +33,7 @@ export function Sidebar() {
     const navItems = [
         { label: 'Overview', href: `/${activeBusinessId}/universal`, icon: Globe, badge: `${businesses.length}`, alertCount: neglectedCount > 0 ? neglectedCount : undefined, isActive: pathname?.endsWith('/universal') || false },
         { label: 'Dashboard', href: `/${activeBusinessId}`, icon: LayoutDashboard, isActive: pathname === `/${activeBusinessId}` },
-        { label: 'Content Studio', href: `/${activeBusinessId}/content`, icon: Calendar, isActive: pathname?.includes(`/${activeBusinessId}/content`) || false },
+        { label: 'Content Studio', href: `/${activeBusinessId}/content/calendar`, icon: Calendar, isActive: pathname?.includes(`/${activeBusinessId}/content`) || false },
         { label: 'Inventory', href: `/${activeBusinessId}/inventory`, icon: Package, isActive: pathname?.includes(`/${activeBusinessId}/inventory`) || false },
         { label: 'Finances', href: `/${activeBusinessId}/finance`, icon: DollarSign, isActive: pathname?.includes(`/${activeBusinessId}/finance`) || false },
         { label: 'Decisions', href: `/${activeBusinessId}/decisions`, icon: Brain, isActive: pathname?.includes(`/${activeBusinessId}/decisions`) || false },
@@ -86,7 +86,7 @@ export function Sidebar() {
                                                 <span className="text-xs font-medium text-[#111] truncate">{b.name}</span>
                                                 {bNeglected && <span className="w-1.5 h-1.5 rounded-full bg-[#FF3B30] shrink-0" />}
                                             </div>
-                                            <span className="text-[10px] text-black/40">${b.metrics.revenueMonth.toLocaleString()}/mo</span>
+                                            <span className="text-[10px] text-black/40">${b.metrics.revenueMonth?.toLocaleString() || 0}/mo</span>
                                         </div>
                                         {isSelected && <Check className="w-3.5 h-3.5 text-black/50 shrink-0" />}
                                     </button>
@@ -139,7 +139,7 @@ export function Sidebar() {
 
             {/* Bottom */}
             <div className="p-2.5 border-t border-black/[0.06] space-y-1">
-                <Link href={`/${activeBusinessId}/settings`}
+                <Link href="/settings"
                     className="flex items-center gap-2.5 px-3 py-2 rounded-xl text-xs font-medium text-black/45 hover:text-black hover:bg-black/[0.04] transition-colors">
                     <Settings className="w-3.5 h-3.5" />
                     <span>Settings</span>

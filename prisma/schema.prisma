@@ -33,6 +33,7 @@ model Post {
   time          String
   status        String   @default("draft")
   platformColor String
+  mediaUrl      String?  @db.Text
   createdAt     DateTime @default(now())
   updatedAt     DateTime @updatedAt
 
