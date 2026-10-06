@@ -1,37 +1,247 @@
 @import "tailwindcss";
 
-/* Force dark everywhere — no light mode */
+/* ═══════════════════════════════════════════════════════
+   BizPilot Design System
+   Apple HIG-inspired · Light mode · Glassmorphism
+   Palette: White / Near-black / Red-only for alerts
+═══════════════════════════════════════════════════════ */
+
 :root {
-  --bg-base: #0a0a0a;
-  --bg-elevated: #141414;
-  --bg-overlay: #1a1a1a;
-  --border: rgba(255,255,255,0.06);
-  --border-subtle: rgba(255,255,255,0.04);
-  --text-primary: #ffffff;
-  --text-secondary: rgba(255,255,255,0.6);
-  --text-muted: rgba(255,255,255,0.35);
+  /* Surfaces */
+  --bg-base:       #F2F2F7;     /* iOS system grouped background */
+  --bg-card:       rgba(255, 255, 255, 0.82);
+  --bg-glass:      rgba(255, 255, 255, 0.72);
+  --bg-glass-deep: rgba(255, 255, 255, 0.60);
+  --bg-sidebar:    rgba(248, 248, 250, 0.94);
+
+  /* Borders */
+  --border:        rgba(0, 0, 0, 0.08);
+  --border-subtle: rgba(0, 0, 0, 0.05);
+  --border-strong: rgba(0, 0, 0, 0.14);
+
+  /* Text */
+  --text-primary:   #111111;
+  --text-secondary: rgba(0, 0, 0, 0.55);
+  --text-muted:     rgba(0, 0, 0, 0.35);
+  --text-placeholder: rgba(0, 0, 0, 0.25);
+
+  /* Accent — black only for primary actions */
+  --accent:         #111111;
+  --accent-hover:   #333333;
+
+  /* Alert red — alerts and destructive only */
+  --red:            #FF3B30;
+  --red-bg:         rgba(255, 59, 48, 0.08);
+  --red-border:     rgba(255, 59, 48, 0.20);
+
+  /* Neutral tones */
+  --fill-1:         rgba(0, 0, 0, 0.04);
+  --fill-2:         rgba(0, 0, 0, 0.06);
+  --fill-3:         rgba(0, 0, 0, 0.09);
+  --fill-hover:     rgba(0, 0, 0, 0.06);
+
+  /* Shadows */
+  --shadow-sm:  0 1px 3px rgba(0,0,0,0.08), 0 1px 2px rgba(0,0,0,0.04);
+  --shadow-md:  0 4px 16px rgba(0,0,0,0.10), 0 2px 6px rgba(0,0,0,0.06);
+  --shadow-lg:  0 12px 40px rgba(0,0,0,0.12), 0 4px 12px rgba(0,0,0,0.06);
+  --shadow-xl:  0 24px 64px rgba(0,0,0,0.14), 0 8px 24px rgba(0,0,0,0.08);
+
+  /* Radius */
+  --radius-sm:  8px;
+  --radius-md:  12px;
+  --radius-lg:  16px;
+  --radius-xl:  20px;
+  --radius-2xl: 24px;
+
+  /* Typography */
+  --font-body:  -apple-system, "SF Pro Text", "Inter", system-ui, sans-serif;
+  --font-display: -apple-system, "SF Pro Display", "Inter", system-ui, sans-serif;
 }
 
-*, *::before, *::after {
-  box-sizing: border-box;
-}
+/* ── Reset ── */
+*, *::before, *::after { box-sizing: border-box; }
 
 html, body {
-  background: var(--bg-base) !important;
-  color: var(--text-primary) !important;
-  font-family: var(--font-inter), system-ui, -apple-system, sans-serif;
+  background: var(--bg-base);
+  color: var(--text-primary);
+  font-family: var(--font-body);
   -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
   height: 100%;
 }
 
-/* Scrollbar styling */
-::-webkit-scrollbar { width: 4px; height: 4px; }
+/* ── Scrollbars — thin macOS style ── */
+::-webkit-scrollbar { width: 5px; height: 5px; }
 ::-webkit-scrollbar-track { background: transparent; }
-::-webkit-scrollbar-thumb { background: rgba(255,255,255,0.1); border-radius: 4px; }
-::-webkit-scrollbar-thumb:hover { background: rgba(255,255,255,0.2); }
+::-webkit-scrollbar-thumb { background: rgba(0,0,0,0.15); border-radius: 10px; }
+::-webkit-scrollbar-thumb:hover { background: rgba(0,0,0,0.25); }
 
-/* Focus ring */
+/* ── Focus ring — subtle black ring ── */
 :focus-visible {
-  outline: 2px solid rgba(99,102,241,0.6);
+  outline: 2px solid rgba(0, 0, 0, 0.35);
   outline-offset: 2px;
+  border-radius: 4px;
 }
+
+/* ── Glass card surface ── */
+.glass {
+  background: var(--bg-glass);
+  backdrop-filter: blur(20px) saturate(1.8);
+  -webkit-backdrop-filter: blur(20px) saturate(1.8);
+  border: 1px solid var(--border);
+  box-shadow: var(--shadow-sm);
+}
+
+.glass-deep {
+  background: var(--bg-glass-deep);
+  backdrop-filter: blur(32px) saturate(2);
+  -webkit-backdrop-filter: blur(32px) saturate(2);
+  border: 1px solid var(--border-subtle);
+  box-shadow: var(--shadow-md);
+}
+
+/* ── Sidebar glass ── */
+.sidebar-glass {
+  background: var(--bg-sidebar);
+  backdrop-filter: blur(24px) saturate(1.8);
+  -webkit-backdrop-filter: blur(24px) saturate(1.8);
+  border-right: 1px solid var(--border);
+}
+
+/* ── Card ── */
+.card {
+  background: var(--bg-card);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-xl);
+  box-shadow: var(--shadow-sm);
+}
+
+.card-hover {
+  transition: box-shadow 0.18s ease, transform 0.18s ease, border-color 0.18s ease;
+}
+.card-hover:hover {
+  box-shadow: var(--shadow-md);
+  border-color: var(--border-strong);
+  transform: translateY(-1px);
+}
+
+/* ── Buttons ── */
+.btn-primary {
+  background: var(--accent);
+  color: #fff;
+  border: none;
+  border-radius: var(--radius-md);
+  font-weight: 600;
+  font-size: 13px;
+  padding: 8px 16px;
+  cursor: pointer;
+  transition: background 0.15s ease, opacity 0.15s ease, transform 0.12s ease;
+}
+.btn-primary:hover { background: var(--accent-hover); transform: translateY(-0.5px); }
+.btn-primary:active { transform: translateY(0); opacity: 0.85; }
+.btn-primary:disabled { opacity: 0.35; cursor: not-allowed; transform: none; }
+
+.btn-secondary {
+  background: var(--fill-2);
+  color: var(--text-primary);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-md);
+  font-weight: 500;
+  font-size: 13px;
+  padding: 8px 16px;
+  cursor: pointer;
+  transition: background 0.15s ease;
+}
+.btn-secondary:hover { background: var(--fill-3); }
+
+.btn-destructive {
+  background: var(--red-bg);
+  color: var(--red);
+  border: 1px solid var(--red-border);
+  border-radius: var(--radius-md);
+  font-weight: 600;
+  font-size: 13px;
+  padding: 8px 16px;
+  cursor: pointer;
+  transition: background 0.15s ease;
+}
+.btn-destructive:hover { background: rgba(255,59,48,0.14); }
+
+/* ── Input fields ── */
+.input {
+  background: var(--fill-1);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-md);
+  color: var(--text-primary);
+  font-size: 14px;
+  padding: 10px 12px;
+  width: 100%;
+  transition: border-color 0.15s ease, box-shadow 0.15s ease;
+}
+.input::placeholder { color: var(--text-placeholder); }
+.input:focus {
+  outline: none;
+  border-color: rgba(0,0,0,0.25);
+  box-shadow: 0 0 0 3px rgba(0,0,0,0.06);
+}
+
+select.input { -webkit-appearance: none; appearance: none; cursor: pointer; }
+
+/* ── Status pill ── */
+.pill {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  padding: 2px 8px;
+  border-radius: 100px;
+  font-size: 11px;
+  font-weight: 600;
+}
+.pill-success { background: rgba(0,0,0,0.06); color: #111; }
+.pill-warning { background: rgba(0,0,0,0.06); color: #555; }
+.pill-danger  { background: var(--red-bg); color: var(--red); }
+.pill-muted   { background: var(--fill-1); color: var(--text-muted); }
+
+/* ── Divider ── */
+.divider { border: none; border-top: 1px solid var(--border); margin: 0; }
+
+/* ── Floating panel backdrop ── */
+.panel-backdrop {
+  background: rgba(0, 0, 0, 0.25);
+  backdrop-filter: blur(4px);
+}
+
+/* ── Nav item active indicator ── */
+.nav-item-active::before {
+  content: '';
+  position: absolute;
+  left: 0;
+  top: 50%;
+  transform: translateY(-50%);
+  width: 3px;
+  height: 60%;
+  background: var(--accent);
+  border-radius: 0 3px 3px 0;
+}
+
+/* ── Micro-animations ── */
+@keyframes fade-up {
+  from { opacity: 0; transform: translateY(6px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+.animate-fade-up { animation: fade-up 0.22s ease forwards; }
+
+@keyframes scale-in {
+  from { opacity: 0; transform: scale(0.97); }
+  to   { opacity: 1; transform: scale(1); }
+}
+.animate-scale-in { animation: scale-in 0.18s ease forwards; }
+
+/* ── Tailwind color overrides so inline classes still work ── */
+/* We keep Tailwind but override defaults to match our palette */
+.bg-base    { background: var(--bg-base) !important; }
+.bg-card    { background: var(--bg-card) !important; }
+.text-body  { color: var(--text-primary) !important; }
+.text-sub   { color: var(--text-secondary) !important; }
+.text-hint  { color: var(--text-muted) !important; }
+.border-ui  { border-color: var(--border) !important; }

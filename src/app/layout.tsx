@@ -15,7 +15,7 @@ export const metadata: Metadata = {
 export default function RootLayout({ children }: { children: React.ReactNode }) {
     return (
         <html lang="en" className={`${inter.variable} antialiased`}>
-            <body className="min-h-screen bg-[#0a0a0a] flex font-sans text-white">
+            <body className="min-h-screen flex font-sans" style={{background:'var(--bg-base)',color:'var(--text-primary)'}}>
                 <AppProvider>
                     <Sidebar />
                     <main className="flex-1 flex flex-col min-h-screen overflow-hidden">

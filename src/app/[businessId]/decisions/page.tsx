@@ -2,19 +2,18 @@
 
 import { useParams } from 'next/navigation';
 import { useApp } from '@/contexts/AppContext';
-import { Plus, AlertTriangle, CheckCircle2, Clock, MoreHorizontal } from 'lucide-react';
-import { useState } from 'react';
+import { Plus, CheckCircle2, Clock, MoreHorizontal } from 'lucide-react';
 import { UniversalDashboardButton } from '@/components/UniversalDashboardButton';
 
-const statusConfig: Record<string, { label: string; color: string; icon: any }> = {
-    IN_DELIBERATION: { label: 'In Deliberation', color: 'text-amber-400 bg-amber-400/10 border-amber-400/20', icon: Clock },
-    DECIDED: { label: 'Decided', color: 'text-blue-400 bg-blue-400/10 border-blue-400/20', icon: CheckCircle2 },
-    IMPLEMENTED: { label: 'Implemented', color: 'text-emerald-400 bg-emerald-400/10 border-emerald-400/20', icon: CheckCircle2 },
-    ARCHIVED: { label: 'Archived', color: 'text-white/40 bg-white/5 border-white/10', icon: MoreHorizontal },
+const statusConfig: Record<string, { label: string; badge: string; icon: any }> = {
+    IN_DELIBERATION: { label: 'In Deliberation', badge: 'pill-warning', icon: Clock },
+    DECIDED: { label: 'Decided', badge: 'pill-primary', icon: CheckCircle2 },
+    IMPLEMENTED: { label: 'Implemented', badge: 'pill-success', icon: CheckCircle2 },
+    ARCHIVED: { label: 'Archived', badge: 'pill-secondary', icon: MoreHorizontal },
 };
 
 const urgencyColors: Record<string, string> = {
-    Immediate: 'text-rose-400', High: 'text-orange-400', Medium: 'text-amber-400', Low: 'text-white/40'
+    Immediate: '#FF3B30', High: '#FF9500', Medium: '#FFCC00', Low: 'var(--text-muted)'
 };
 
 export default function DecisionLog() {
@@ -26,15 +25,15 @@ export default function DecisionLog() {
     const businessDecisions = decisions.filter(d => d.businessId === businessId);
 
     return (
-        <div className="min-h-screen bg-[#0a0a0a]">
-            <header className="sticky top-0 z-10 bg-[#0a0a0a]/80 backdrop-blur-xl border-b border-white/[0.06] px-8 h-16 flex items-center justify-between">
+        <div className="min-h-screen" style={{ background: 'var(--bg-base)' }}>
+            <header className="sticky top-0 z-10 glass border-b px-8 h-16 flex items-center justify-between" style={{ borderColor: 'var(--border)' }}>
                 <div>
-                    <h1 className="text-base font-semibold text-white">Decision Log</h1>
-                    <p className="text-[11px] text-white/40">{business?.name}</p>
+                    <h1 className="text-base font-semibold leading-tight" style={{ color: 'var(--text-primary)' }}>Decision Log</h1>
+                    <p className="text-[11px]" style={{ color: 'var(--text-muted)' }}>{business?.name}</p>
                 </div>
                 <div className="flex items-center gap-3">
                     <UniversalDashboardButton />
-                    <button onClick={() => setActiveModal('NEW_DECISION')} className="flex items-center gap-2 bg-indigo-500/10 border border-indigo-500/20 text-indigo-400 px-4 py-2 rounded-lg text-sm font-medium hover:bg-indigo-500/20 transition-colors">
+                    <button onClick={() => setActiveModal('NEW_DECISION')} className="btn-primary flex items-center gap-2">
                         <Plus className="w-4 h-4" /> New Decision
                     </button>
                 </div>
@@ -45,46 +44,46 @@ export default function DecisionLog() {
                     const sc = statusConfig[d.status] ?? statusConfig.ARCHIVED;
                     const Icon = sc.icon;
                     return (
-                        <div key={d.id} className="bg-[#141414] border border-white/[0.06] rounded-2xl overflow-hidden hover:border-white/10 transition-colors">
-                            <div className="p-5">
+                        <div key={d.id} className="card card-hover overflow-hidden">
+                            <div className="p-6">
                                 <div className="flex items-start justify-between gap-4 mb-3">
-                                    <h3 className="text-base font-semibold text-white leading-tight">{d.title}</h3>
+                                    <h3 className="text-base font-bold leading-tight" style={{ color: 'var(--text-primary)' }}>{d.title}</h3>
                                     <div className="flex items-center gap-2 shrink-0">
-                                        <span className={`flex items-center gap-1.5 text-[10px] font-semibold px-2 py-1 rounded-full border ${sc.color}`}>
+                                        <span className={`pill ${sc.badge} flex items-center gap-1.5`}>
                                             <Icon className="w-3 h-3" /> {sc.label}
                                         </span>
                                     </div>
                                 </div>
-                                <p className="text-sm text-white/50 leading-relaxed mb-4">{d.context}</p>
-                                <div className="flex items-center gap-6">
+                                <p className="text-sm leading-relaxed mb-5" style={{ color: 'var(--text-secondary)' }}>{d.context}</p>
+                                <div className="flex items-center gap-8">
                                     <div>
-                                        <span className="text-[10px] text-white/30 uppercase tracking-wider">Urgency</span>
-                                        <p className={`text-xs font-semibold ${urgencyColors[d.urgency]}`}>{d.urgency}</p>
+                                        <span className="text-[10px] font-bold uppercase tracking-wider block mb-0.5" style={{ color: 'var(--text-muted)' }}>Urgency</span>
+                                        <p className="text-xs font-bold" style={{ color: urgencyColors[d.urgency] }}>{d.urgency}</p>
                                     </div>
                                     <div>
-                                        <span className="text-[10px] text-white/30 uppercase tracking-wider">Impact</span>
-                                        <p className="text-xs font-semibold text-white/70">{d.impact}</p>
+                                        <span className="text-[10px] font-bold uppercase tracking-wider block mb-0.5" style={{ color: 'var(--text-muted)' }}>Impact</span>
+                                        <p className="text-xs font-bold" style={{ color: 'var(--text-primary)' }}>{d.impact}</p>
                                     </div>
                                     <div>
-                                        <span className="text-[10px] text-white/30 uppercase tracking-wider">Deadline</span>
-                                        <p className="text-xs font-semibold text-white/70">{d.deadline}</p>
+                                        <span className="text-[10px] font-bold uppercase tracking-wider block mb-0.5" style={{ color: 'var(--text-muted)' }}>Deadline</span>
+                                        <p className="text-xs font-bold" style={{ color: 'var(--text-primary)' }}>{d.deadline}</p>
                                     </div>
                                     {d.outcomeRating && (
                                         <div>
-                                            <span className="text-[10px] text-white/30 uppercase tracking-wider">Outcome</span>
-                                            <p className="text-xs font-semibold text-amber-400">{'★'.repeat(d.outcomeRating)}{'☆'.repeat(5 - d.outcomeRating)}</p>
+                                            <span className="text-[10px] font-bold uppercase tracking-wider block mb-0.5" style={{ color: 'var(--text-muted)' }}>Outcome</span>
+                                            <p className="text-xs font-semibold" style={{ color: '#FF9500' }}>{'★'.repeat(d.outcomeRating)}{'☆'.repeat(5 - d.outcomeRating)}</p>
                                         </div>
                                     )}
                                 </div>
                                 {d.chosen && (
-                                    <div className="mt-4 px-3 py-2.5 bg-white/[0.02] border border-white/[0.04] rounded-lg">
-                                        <p className="text-[10px] font-semibold text-white/30 uppercase tracking-wider mb-1">Chosen Path</p>
-                                        <p className="text-sm text-white/70">{d.chosen}</p>
+                                    <div className="mt-5 px-4 py-3 rounded-xl border" style={{ background: 'var(--fill-1)', borderColor: 'var(--border)' }}>
+                                        <p className="text-[10px] font-bold uppercase tracking-wider mb-1" style={{ color: 'var(--text-muted)' }}>Chosen Path</p>
+                                        <p className="text-sm font-medium" style={{ color: 'var(--text-primary)' }}>{d.chosen}</p>
                                     </div>
                                 )}
-                                <div className="mt-3 px-3 py-2 bg-indigo-500/5 border border-indigo-500/10 rounded-lg">
-                                    <p className="text-[10px] font-semibold text-indigo-400/60 uppercase tracking-wider mb-0.5">Success KPI</p>
-                                    <p className="text-xs text-indigo-300/80">{d.kpi}</p>
+                                <div className="mt-3 px-4 py-3 rounded-xl border" style={{ background: 'rgba(0, 122, 255, 0.05)', borderColor: 'rgba(0, 122, 255, 0.1)' }}>
+                                    <p className="text-[10px] font-bold uppercase tracking-wider mb-1" style={{ color: '#007AFF' }}>Success KPI</p>
+                                    <p className="text-xs font-medium" style={{ color: 'var(--text-primary)' }}>{d.kpi}</p>
                                 </div>
                             </div>
                         </div>

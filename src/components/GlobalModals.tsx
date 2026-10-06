@@ -2,6 +2,7 @@
 
 import { useApp } from '@/contexts/AppContext';
 import { useState } from 'react';
+import { X } from 'lucide-react';
 
 export function GlobalModals() {
     const appCtx = useApp();
@@ -12,10 +13,10 @@ export function GlobalModals() {
     const closeModal = () => setActiveModal(null);
 
     return (
-        <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/60 backdrop-blur-sm p-4">
-            <div className="bg-[#121212] border border-white/10 rounded-2xl w-full max-w-md shadow-2xl flex flex-col max-h-[90vh]">
-                <div className="flex items-center justify-between p-4 border-b border-white/10">
-                    <h2 className="text-lg font-semibold text-white">
+        <div className="fixed inset-0 z-50 flex items-center justify-center p-4 panel-backdrop animate-fade-up">
+            <div className="card w-full max-w-md flex flex-col max-h-[90vh] overflow-hidden shadow-2xl">
+                <div className="flex items-center justify-between p-4 border-b" style={{ borderColor: 'var(--border)', background: 'var(--fill-1)' }}>
+                    <h2 className="text-lg font-bold" style={{ color: 'var(--text-primary)' }}>
                         {activeModal === 'ADD_BUSINESS' && 'Create Workspace'}
                         {activeModal === 'ADD_POST' && 'Create Post'}
                         {activeModal === 'LOG_SALE' && 'Log Sale'}
@@ -25,12 +26,12 @@ export function GlobalModals() {
                         {activeModal === 'NEW_DECISION' && 'New Decision'}
                         {activeModal === 'ADD_SOCIAL_ACCOUNT' && 'Store Credentials'}
                     </h2>
-                    <button onClick={closeModal} className="text-white/50 hover:text-white p-1 rounded-lg hover:bg-white/5">
-                        <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M18 6 6 18"/><path d="m6 6 12 12"/></svg>
+                    <button onClick={closeModal} className="p-1.5 rounded-lg transition-colors hover:bg-black/5" style={{ color: 'var(--text-secondary)' }}>
+                        <X className="w-5 h-5" />
                     </button>
                 </div>
                 
-                <div className="p-4 overflow-y-auto custom-scrollbar">
+                <div className="p-5 overflow-y-auto" style={{ background: 'var(--bg-base)' }}>
                     {activeModal === 'ADD_BUSINESS' && <AddBusinessForm onClose={closeModal} addBusiness={appCtx.addBusiness} />}
                     {activeModal === 'ADD_POST' && <AddPostForm onClose={closeModal} addPost={appCtx.addPost} businesses={appCtx.businesses} />}
                     {activeModal === 'LOG_SALE' && <AddTransactionForm type="SALE" onClose={closeModal} appCtx={appCtx} />}
@@ -58,12 +59,12 @@ function AddBusinessForm({ onClose, addBusiness }: any) {
     return (
         <form onSubmit={submit} className="flex flex-col gap-4">
             <div>
-                <label className="text-xs font-medium text-white/50 mb-1 block">Business Name</label>
-                <input required value={name} onChange={e => setName(e.target.value)} className="w-full bg-white/5 border border-white/10 rounded-lg p-2 text-sm text-white focus:outline-none focus:border-indigo-500" placeholder="e.g. Acme Corp" />
+                <label className="text-[10px] font-bold uppercase tracking-wider block mb-1.5" style={{ color: 'var(--text-muted)' }}>Business Name</label>
+                <input required value={name} onChange={e => setName(e.target.value)} className="input" placeholder="e.g. Acme Corp" />
             </div>
             <div>
-                <label className="text-xs font-medium text-white/50 mb-1 block">Theme Color</label>
-                <select value={color} onChange={e => setColor(e.target.value)} className="w-full bg-white/5 border border-white/10 rounded-lg p-2 text-sm text-white focus:outline-none focus:border-indigo-500">
+                <label className="text-[10px] font-bold uppercase tracking-wider block mb-1.5" style={{ color: 'var(--text-muted)' }}>Theme Color</label>
+                <select value={color} onChange={e => setColor(e.target.value)} className="input">
                     <option value="from-indigo-500 to-purple-500">Indigo / Purple</option>
                     <option value="from-pink-500 to-rose-500">Pink / Rose</option>
                     <option value="from-emerald-400 to-teal-500">Emerald / Teal</option>
@@ -71,7 +72,7 @@ function AddBusinessForm({ onClose, addBusiness }: any) {
                     <option value="from-sky-400 to-blue-500">Sky / Blue</option>
                 </select>
             </div>
-            <button type="submit" className="mt-4 bg-white text-black font-semibold rounded-lg p-2 text-sm hover:bg-white/90">Create Workspace</button>
+            <button type="submit" className="mt-4 btn-primary py-2.5">Create Workspace</button>
         </form>
     );
 }
@@ -112,35 +113,35 @@ function AddPostForm({ onClose, addPost, businesses }: any) {
     return (
         <form onSubmit={submit} className="flex flex-col gap-4">
             <div>
-                <label className="text-xs font-medium text-white/50 mb-1 block">Post Title</label>
-                <input required value={title} onChange={e => setTitle(e.target.value)} className="w-full bg-white/5 border border-white/10 rounded-lg p-2 text-sm text-white focus:outline-none focus:border-indigo-500" placeholder="e.g. Summer Promo" />
+                <label className="text-[10px] font-bold uppercase tracking-wider block mb-1.5" style={{ color: 'var(--text-muted)' }}>Post Title</label>
+                <input required value={title} onChange={e => setTitle(e.target.value)} className="input" placeholder="e.g. Summer Promo" />
             </div>
             <div>
-                <label className="text-xs font-medium text-white/50 mb-1 block">Media Upload</label>
-                <input type="file" onChange={e => setFile(e.target.files?.[0] || null)} className="w-full text-sm text-white/50 file:mr-4 file:py-2 file:px-4 file:rounded-lg file:border-0 file:text-xs file:font-semibold file:bg-white/10 file:text-white hover:file:bg-white/20" />
-                {file && <span className="text-[10px] text-emerald-400 mt-1 block">File selected: {file.name}</span>}
+                <label className="text-[10px] font-bold uppercase tracking-wider block mb-1.5" style={{ color: 'var(--text-muted)' }}>Media Upload</label>
+                <input type="file" onChange={e => setFile(e.target.files?.[0] || null)} className="input file:mr-4 file:py-1 file:px-3 file:rounded-md file:border-0 file:text-xs file:font-semibold file:bg-black/5 file:text-black hover:file:bg-black/10 cursor-pointer" />
+                {file && <span className="text-[10px] font-semibold mt-1 block" style={{ color: '#34C759' }}>File selected: {file.name}</span>}
             </div>
             <div className="grid grid-cols-2 gap-4">
                 <div>
-                    <label className="text-xs font-medium text-white/50 mb-1 block">Platform</label>
-                    <select value={platform} onChange={e => setPlatform(e.target.value)} className="w-full bg-white/5 border border-white/10 rounded-lg p-2 text-sm text-white focus:outline-none focus:border-indigo-500">
+                    <label className="text-[10px] font-bold uppercase tracking-wider block mb-1.5" style={{ color: 'var(--text-muted)' }}>Platform</label>
+                    <select value={platform} onChange={e => setPlatform(e.target.value)} className="input">
                         <option>Instagram</option><option>TikTok</option><option>Twitter</option><option>LinkedIn</option>
                     </select>
                 </div>
                 <div>
-                    <label className="text-xs font-medium text-white/50 mb-1 block">Date (Day of Month)</label>
-                    <input type="number" required value={date} onChange={e => setDate(Number(e.target.value))} min={1} max={31} className="w-full bg-white/5 border border-white/10 rounded-lg p-2 text-sm text-white focus:outline-none focus:border-indigo-500" />
+                    <label className="text-[10px] font-bold uppercase tracking-wider block mb-1.5" style={{ color: 'var(--text-muted)' }}>Date</label>
+                    <input type="number" required value={date} onChange={e => setDate(Number(e.target.value))} min={1} max={31} className="input" />
                 </div>
             </div>
             <div>
-                <label className="text-xs font-medium text-white/50 mb-1 block">Business</label>
-                <select value={businessId} onChange={e => setBusinessId(e.target.value)} className="w-full bg-white/5 border border-white/10 rounded-lg p-2 text-sm text-white focus:outline-none focus:border-indigo-500">
+                <label className="text-[10px] font-bold uppercase tracking-wider block mb-1.5" style={{ color: 'var(--text-muted)' }}>Business</label>
+                <select value={businessId} onChange={e => setBusinessId(e.target.value)} className="input">
                     {businesses.map((b: any) => <option key={b.id} value={b.id}>{b.name}</option>)}
                 </select>
             </div>
-            <button type="submit" disabled={uploading} className="mt-4 bg-white text-black font-semibold rounded-lg p-2 text-sm hover:bg-white/90 disabled:opacity-50 flex justify-center items-center">
+            <button type="submit" disabled={uploading} className="mt-4 btn-primary py-2.5 flex justify-center items-center">
                 {uploading ? (
-                    <svg className="animate-spin -ml-1 mr-2 h-4 w-4 text-black" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24"><circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4"></circle><path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path></svg>
+                    <svg className="animate-spin -ml-1 mr-2 h-4 w-4 text-white" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24"><circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4"></circle><path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path></svg>
                 ) : 'Create Post'}
             </button>
         </form>
@@ -180,39 +181,41 @@ function AddTransactionForm({ type, onClose, appCtx }: any) {
     return (
         <form onSubmit={submit} className="flex flex-col gap-4">
             <div>
-                <label className="text-xs font-medium text-white/50 mb-1 block">Business</label>
-                <select value={businessId} onChange={e => { setBusinessId(e.target.value); setSelectedItemId(''); }} className="w-full bg-white/5 border border-white/10 rounded-lg p-2 text-sm text-white focus:outline-none focus:border-indigo-500">
+                <label className="text-[10px] font-bold uppercase tracking-wider block mb-1.5" style={{ color: 'var(--text-muted)' }}>Business</label>
+                <select value={businessId} onChange={e => { setBusinessId(e.target.value); setSelectedItemId(''); }} className="input">
                     {businesses.map((b: any) => <option key={b.id} value={b.id}>{b.name}</option>)}
                 </select>
             </div>
 
             {type === 'SALE' ? (
                 <div>
-                    <label className="text-xs font-medium text-white/50 mb-1 block">Select Inventory Item</label>
-                    <select required value={selectedItemId} onChange={e => setSelectedItemId(e.target.value)} className="w-full bg-white/5 border border-white/10 rounded-lg p-2 text-sm text-white focus:outline-none focus:border-indigo-500">
+                    <label className="text-[10px] font-bold uppercase tracking-wider block mb-1.5" style={{ color: 'var(--text-muted)' }}>Select Inventory Item</label>
+                    <select required value={selectedItemId} onChange={e => setSelectedItemId(e.target.value)} className="input">
                         <option value="" disabled>Select an item to sell...</option>
                         {availableItems.map((item: any) => (
                             <option key={item.id} value={item.id}>{item.title} - ${item.price.toFixed(2)}</option>
                         ))}
                     </select>
                     {availableItems.length === 0 && (
-                        <p className="text-[10px] text-amber-400 mt-1">No available items to sell for this business.</p>
+                        <p className="text-[10px] font-semibold mt-1" style={{ color: '#FF9500' }}>No available items to sell for this business.</p>
                     )}
                 </div>
             ) : (
                 <>
                     <div>
-                        <label className="text-xs font-medium text-white/50 mb-1 block">Description</label>
-                        <input required value={description} onChange={e => setDescription(e.target.value)} className="w-full bg-white/5 border border-white/10 rounded-lg p-2 text-sm text-white focus:outline-none focus:border-indigo-500" placeholder="e.g. Office 2024 Key" />
+                        <label className="text-[10px] font-bold uppercase tracking-wider block mb-1.5" style={{ color: 'var(--text-muted)' }}>Description</label>
+                        <input required value={description} onChange={e => setDescription(e.target.value)} className="input" placeholder="e.g. Office 2024 Key" />
                     </div>
                     <div>
-                        <label className="text-xs font-medium text-white/50 mb-1 block">Amount ($)</label>
-                        <input type="number" step="0.01" required value={amount} onChange={e => setAmount(e.target.value)} className="w-full bg-white/5 border border-white/10 rounded-lg p-2 text-sm text-white focus:outline-none focus:border-indigo-500" placeholder="0.00" />
+                        <label className="text-[10px] font-bold uppercase tracking-wider block mb-1.5" style={{ color: 'var(--text-muted)' }}>Amount ($)</label>
+                        <input type="number" step="0.01" required value={amount} onChange={e => setAmount(e.target.value)} className="input" placeholder="0.00" />
                     </div>
                 </>
             )}
 
-            <button type="submit" disabled={type === 'SALE' && !selectedItemId} className="mt-4 bg-white text-black font-semibold rounded-lg p-2 text-sm hover:bg-white/90 disabled:opacity-50">{type === 'SALE' ? 'Log Sale' : 'Add Expense'}</button>
+            <button type="submit" disabled={type === 'SALE' && !selectedItemId} className="mt-4 btn-primary py-2.5">
+                {type === 'SALE' ? 'Log Sale' : 'Add Expense'}
+            </button>
         </form>
     );
 }
@@ -234,30 +237,30 @@ function AddVendorForm({ onClose, appCtx }: any) {
     return (
         <form onSubmit={submit} className="flex flex-col gap-4">
             <div>
-                <label className="text-xs font-medium text-white/50 mb-1 block">Business</label>
-                <select value={businessId} onChange={e => setBusinessId(e.target.value)} className="w-full bg-white/5 border border-white/10 rounded-lg p-2 text-sm text-white focus:outline-none focus:border-indigo-500">
+                <label className="text-[10px] font-bold uppercase tracking-wider block mb-1.5" style={{ color: 'var(--text-muted)' }}>Business</label>
+                <select value={businessId} onChange={e => setBusinessId(e.target.value)} className="input">
                     {businesses.map((b: any) => <option key={b.id} value={b.id}>{b.name}</option>)}
                 </select>
             </div>
             <div>
-                <label className="text-xs font-medium text-white/50 mb-1 block">Vendor Name</label>
-                <input required value={name} onChange={e => setName(e.target.value)} className="w-full bg-white/5 border border-white/10 rounded-lg p-2 text-sm text-white focus:outline-none focus:border-indigo-500" placeholder="e.g. Alpha Keys" />
+                <label className="text-[10px] font-bold uppercase tracking-wider block mb-1.5" style={{ color: 'var(--text-muted)' }}>Vendor Name</label>
+                <input required value={name} onChange={e => setName(e.target.value)} className="input" placeholder="e.g. Alpha Keys" />
             </div>
             <div className="grid grid-cols-2 gap-4">
                 <div>
-                    <label className="text-xs font-medium text-white/50 mb-1 block">WhatsApp URL</label>
-                    <input value={whatsapp} onChange={e => setWhatsapp(e.target.value)} className="w-full bg-white/5 border border-white/10 rounded-lg p-2 text-sm text-white focus:outline-none focus:border-indigo-500" placeholder="e.g. https://wa.me/..." />
+                    <label className="text-[10px] font-bold uppercase tracking-wider block mb-1.5" style={{ color: 'var(--text-muted)' }}>WhatsApp URL</label>
+                    <input value={whatsapp} onChange={e => setWhatsapp(e.target.value)} className="input" placeholder="e.g. https://wa.me/..." />
                 </div>
                 <div>
-                    <label className="text-xs font-medium text-white/50 mb-1 block">Telegram</label>
-                    <input value={telegram} onChange={e => setTelegram(e.target.value)} className="w-full bg-white/5 border border-white/10 rounded-lg p-2 text-sm text-white focus:outline-none focus:border-indigo-500" placeholder="e.g. @alphakeys" />
+                    <label className="text-[10px] font-bold uppercase tracking-wider block mb-1.5" style={{ color: 'var(--text-muted)' }}>Telegram</label>
+                    <input value={telegram} onChange={e => setTelegram(e.target.value)} className="input" placeholder="e.g. @alphakeys" />
                 </div>
             </div>
             <div>
-                <label className="text-xs font-medium text-white/50 mb-1 block">Notes</label>
-                <input value={notes} onChange={e => setNotes(e.target.value)} className="w-full bg-white/5 border border-white/10 rounded-lg p-2 text-sm text-white focus:outline-none focus:border-indigo-500" placeholder="e.g. PayPal only, fast delivery" />
+                <label className="text-[10px] font-bold uppercase tracking-wider block mb-1.5" style={{ color: 'var(--text-muted)' }}>Notes</label>
+                <input value={notes} onChange={e => setNotes(e.target.value)} className="input" placeholder="e.g. PayPal only, fast delivery" />
             </div>
-            <button type="submit" className="mt-4 bg-white text-black font-semibold rounded-lg p-2 text-sm hover:bg-white/90">Add Vendor</button>
+            <button type="submit" className="mt-4 btn-primary py-2.5">Add Vendor</button>
         </form>
     );
 }
@@ -297,37 +300,37 @@ function AddStockForm({ onClose, appCtx }: any) {
     return (
         <form onSubmit={submit} className="flex flex-col gap-4">
             <div>
-                <label className="text-xs font-medium text-white/50 mb-1 block">Business</label>
-                <select value={businessId} onChange={e => { setBusinessId(e.target.value); setVendorId(''); }} className="w-full bg-white/5 border border-white/10 rounded-lg p-2 text-sm text-white focus:outline-none focus:border-indigo-500">
+                <label className="text-[10px] font-bold uppercase tracking-wider block mb-1.5" style={{ color: 'var(--text-muted)' }}>Business</label>
+                <select value={businessId} onChange={e => { setBusinessId(e.target.value); setVendorId(''); }} className="input">
                     {businesses.map((b: any) => <option key={b.id} value={b.id}>{b.name}</option>)}
                 </select>
             </div>
             <div>
-                <label className="text-xs font-medium text-white/50 mb-1 block">Item Title</label>
-                <input required value={title} onChange={e => setTitle(e.target.value)} className="w-full bg-white/5 border border-white/10 rounded-lg p-2 text-sm text-white focus:outline-none focus:border-indigo-500" placeholder="e.g. Windows 11 Key" />
+                <label className="text-[10px] font-bold uppercase tracking-wider block mb-1.5" style={{ color: 'var(--text-muted)' }}>Item Title</label>
+                <input required value={title} onChange={e => setTitle(e.target.value)} className="input" placeholder="e.g. Windows 11 Key" />
             </div>
             <div>
-                <label className="text-xs font-medium text-white/50 mb-1 block">SKU</label>
-                <input required value={sku} onChange={e => setSku(e.target.value)} className="w-full bg-white/5 border border-white/10 rounded-lg p-2 text-sm text-white focus:outline-none focus:border-indigo-500" placeholder="e.g. WIN11-01" />
+                <label className="text-[10px] font-bold uppercase tracking-wider block mb-1.5" style={{ color: 'var(--text-muted)' }}>SKU</label>
+                <input required value={sku} onChange={e => setSku(e.target.value)} className="input" placeholder="e.g. WIN11-01" />
             </div>
             <div className="grid grid-cols-2 gap-4">
                 <div>
-                    <label className="text-xs font-medium text-white/50 mb-1 block">Cost ($)</label>
-                    <input type="number" step="0.01" required value={cost} onChange={e => setCost(e.target.value)} className="w-full bg-white/5 border border-white/10 rounded-lg p-2 text-sm text-white focus:outline-none focus:border-indigo-500" placeholder="0.00" />
+                    <label className="text-[10px] font-bold uppercase tracking-wider block mb-1.5" style={{ color: 'var(--text-muted)' }}>Cost ($)</label>
+                    <input type="number" step="0.01" required value={cost} onChange={e => setCost(e.target.value)} className="input" placeholder="0.00" />
                 </div>
                 <div>
-                    <label className="text-xs font-medium text-white/50 mb-1 block">Selling Price ($)</label>
-                    <input type="number" step="0.01" required value={price} onChange={e => setPrice(e.target.value)} className="w-full bg-white/5 border border-white/10 rounded-lg p-2 text-sm text-white focus:outline-none focus:border-indigo-500" placeholder="0.00" />
+                    <label className="text-[10px] font-bold uppercase tracking-wider block mb-1.5" style={{ color: 'var(--text-muted)' }}>Selling Price ($)</label>
+                    <input type="number" step="0.01" required value={price} onChange={e => setPrice(e.target.value)} className="input" placeholder="0.00" />
                 </div>
             </div>
             <div>
-                <label className="text-xs font-medium text-white/50 mb-1 block">Vendor</label>
-                <select required value={vendorId} onChange={e => setVendorId(e.target.value)} className="w-full bg-white/5 border border-white/10 rounded-lg p-2 text-sm text-white focus:outline-none focus:border-indigo-500">
+                <label className="text-[10px] font-bold uppercase tracking-wider block mb-1.5" style={{ color: 'var(--text-muted)' }}>Vendor</label>
+                <select required value={vendorId} onChange={e => setVendorId(e.target.value)} className="input">
                     <option value="" disabled>Select a vendor...</option>
                     {businessVendors.map((v: any) => <option key={v.id} value={v.id}>{v.name}</option>)}
                 </select>
             </div>
-            <button type="submit" disabled={!vendorId} className="mt-4 bg-white text-black font-semibold rounded-lg p-2 text-sm hover:bg-white/90 disabled:opacity-50">Add Stock</button>
+            <button type="submit" disabled={!vendorId} className="mt-4 btn-primary py-2.5">Add Stock</button>
         </form>
     );
 }
@@ -346,22 +349,22 @@ function AddDecisionForm({ onClose, addDecision, businesses }: any) {
     return (
         <form onSubmit={submit} className="flex flex-col gap-4">
             <div>
-                <label className="text-xs font-medium text-white/50 mb-1 block">Decision Title</label>
-                <input required value={title} onChange={e => setTitle(e.target.value)} className="w-full bg-white/5 border border-white/10 rounded-lg p-2 text-sm text-white focus:outline-none focus:border-indigo-500" placeholder="e.g. Switch vendor for licenses" />
+                <label className="text-[10px] font-bold uppercase tracking-wider block mb-1.5" style={{ color: 'var(--text-muted)' }}>Decision Title</label>
+                <input required value={title} onChange={e => setTitle(e.target.value)} className="input" placeholder="e.g. Switch vendor for licenses" />
             </div>
             <div>
-                <label className="text-xs font-medium text-white/50 mb-1 block">Urgency</label>
-                <select value={urgency} onChange={e => setUrgency(e.target.value)} className="w-full bg-white/5 border border-white/10 rounded-lg p-2 text-sm text-white focus:outline-none focus:border-indigo-500">
+                <label className="text-[10px] font-bold uppercase tracking-wider block mb-1.5" style={{ color: 'var(--text-muted)' }}>Urgency</label>
+                <select value={urgency} onChange={e => setUrgency(e.target.value)} className="input">
                     <option>Low</option><option>Medium</option><option>High</option><option>Immediate</option>
                 </select>
             </div>
             <div>
-                <label className="text-xs font-medium text-white/50 mb-1 block">Business</label>
-                <select value={businessId} onChange={e => setBusinessId(e.target.value)} className="w-full bg-white/5 border border-white/10 rounded-lg p-2 text-sm text-white focus:outline-none focus:border-indigo-500">
+                <label className="text-[10px] font-bold uppercase tracking-wider block mb-1.5" style={{ color: 'var(--text-muted)' }}>Business</label>
+                <select value={businessId} onChange={e => setBusinessId(e.target.value)} className="input">
                     {businesses.map((b: any) => <option key={b.id} value={b.id}>{b.name}</option>)}
                 </select>
             </div>
-            <button type="submit" className="mt-4 bg-white text-black font-semibold rounded-lg p-2 text-sm hover:bg-white/90">Add Decision</button>
+            <button type="submit" className="mt-4 btn-primary py-2.5">Add Decision</button>
         </form>
     );
 }
@@ -379,60 +382,51 @@ function AddSocialAccountForm({ onClose, appCtx }: any) {
 
     const submit = (e: any) => {
         e.preventDefault();
-        addSocialAccount({
-            businessId,
-            platform,
-            username,
-            email,
-            password,
-            recoveryEmail,
-            phoneLinked,
-            devices
-        });
+        addSocialAccount({ businessId, platform, username, email, password, recoveryEmail, phoneLinked, devices });
         onClose();
     };
 
     return (
         <form onSubmit={submit} className="flex flex-col gap-4">
             <div>
-                <label className="text-xs font-medium text-white/50 mb-1 block">Workspace</label>
-                <select value={businessId} onChange={e => setBusinessId(e.target.value)} className="w-full bg-white/5 border border-white/10 rounded-lg p-2 text-sm text-white focus:outline-none focus:border-rose-500">
+                <label className="text-[10px] font-bold uppercase tracking-wider block mb-1.5" style={{ color: 'var(--text-muted)' }}>Workspace</label>
+                <select value={businessId} onChange={e => setBusinessId(e.target.value)} className="input focus:border-[#FF3B30] focus:ring-[#FF3B30]">
                     {businesses.map((b: any) => <option key={b.id} value={b.id}>{b.name}</option>)}
                 </select>
             </div>
             <div className="grid grid-cols-2 gap-4">
                 <div>
-                    <label className="text-xs font-medium text-white/50 mb-1 block">Platform</label>
-                    <input required value={platform} onChange={e => setPlatform(e.target.value)} placeholder="e.g. Instagram" className="w-full bg-white/5 border border-white/10 rounded-lg p-2 text-sm text-white focus:outline-none focus:border-rose-500" />
+                    <label className="text-[10px] font-bold uppercase tracking-wider block mb-1.5" style={{ color: 'var(--text-muted)' }}>Platform</label>
+                    <input required value={platform} onChange={e => setPlatform(e.target.value)} placeholder="e.g. Instagram" className="input focus:border-[#FF3B30] focus:ring-[#FF3B30]" />
                 </div>
                 <div>
-                    <label className="text-xs font-medium text-white/50 mb-1 block">Username / Handle</label>
-                    <input required value={username} onChange={e => setUsername(e.target.value)} placeholder="@handle" className="w-full bg-white/5 border border-white/10 rounded-lg p-2 text-sm text-white focus:outline-none focus:border-rose-500" />
+                    <label className="text-[10px] font-bold uppercase tracking-wider block mb-1.5" style={{ color: 'var(--text-muted)' }}>Username / Handle</label>
+                    <input required value={username} onChange={e => setUsername(e.target.value)} placeholder="@handle" className="input focus:border-[#FF3B30] focus:ring-[#FF3B30]" />
                 </div>
             </div>
             <div>
-                <label className="text-xs font-medium text-white/50 mb-1 block">Login Email</label>
-                <input type="email" required value={email} onChange={e => setEmail(e.target.value)} placeholder="hello@company.com" className="w-full bg-white/5 border border-white/10 rounded-lg p-2 text-sm text-white focus:outline-none focus:border-rose-500" />
+                <label className="text-[10px] font-bold uppercase tracking-wider block mb-1.5" style={{ color: 'var(--text-muted)' }}>Login Email</label>
+                <input type="email" required value={email} onChange={e => setEmail(e.target.value)} placeholder="hello@company.com" className="input focus:border-[#FF3B30] focus:ring-[#FF3B30]" />
             </div>
             <div>
-                <label className="text-xs font-medium text-white/50 mb-1 block">Password</label>
-                <input type="text" required value={password} onChange={e => setPassword(e.target.value)} placeholder="Secure password" className="w-full bg-white/5 border border-white/10 rounded-lg p-2 text-sm text-white focus:outline-none focus:border-rose-500" />
+                <label className="text-[10px] font-bold uppercase tracking-wider block mb-1.5" style={{ color: 'var(--text-muted)' }}>Password</label>
+                <input type="text" required value={password} onChange={e => setPassword(e.target.value)} placeholder="Secure password" className="input focus:border-[#FF3B30] focus:ring-[#FF3B30]" />
             </div>
             <div className="grid grid-cols-2 gap-4">
                 <div>
-                    <label className="text-xs font-medium text-white/50 mb-1 block">Recovery Email (Optional)</label>
-                    <input type="email" value={recoveryEmail} onChange={e => setRecoveryEmail(e.target.value)} className="w-full bg-white/5 border border-white/10 rounded-lg p-2 text-sm text-white focus:outline-none focus:border-rose-500" />
+                    <label className="text-[10px] font-bold uppercase tracking-wider block mb-1.5" style={{ color: 'var(--text-muted)' }}>Recovery Email (Optional)</label>
+                    <input type="email" value={recoveryEmail} onChange={e => setRecoveryEmail(e.target.value)} className="input focus:border-[#FF3B30] focus:ring-[#FF3B30]" />
                 </div>
                 <div>
-                    <label className="text-xs font-medium text-white/50 mb-1 block">Linked Phone (Optional)</label>
-                    <input type="tel" value={phoneLinked} onChange={e => setPhoneLinked(e.target.value)} className="w-full bg-white/5 border border-white/10 rounded-lg p-2 text-sm text-white focus:outline-none focus:border-rose-500" />
+                    <label className="text-[10px] font-bold uppercase tracking-wider block mb-1.5" style={{ color: 'var(--text-muted)' }}>Linked Phone (Optional)</label>
+                    <input type="tel" value={phoneLinked} onChange={e => setPhoneLinked(e.target.value)} className="input focus:border-[#FF3B30] focus:ring-[#FF3B30]" />
                 </div>
             </div>
             <div>
-                <label className="text-xs font-medium text-white/50 mb-1 block">Authorized Devices (Optional)</label>
-                <input type="text" value={devices} onChange={e => setDevices(e.target.value)} placeholder="e.g. iPhone 14, MacBook Pro" className="w-full bg-white/5 border border-white/10 rounded-lg p-2 text-sm text-white focus:outline-none focus:border-rose-500" />
+                <label className="text-[10px] font-bold uppercase tracking-wider block mb-1.5" style={{ color: 'var(--text-muted)' }}>Authorized Devices (Optional)</label>
+                <input type="text" value={devices} onChange={e => setDevices(e.target.value)} placeholder="e.g. iPhone 14, MacBook Pro" className="input focus:border-[#FF3B30] focus:ring-[#FF3B30]" />
             </div>
-            <button type="submit" className="mt-4 bg-rose-500 hover:bg-rose-600 text-white font-semibold rounded-lg p-2 text-sm transition-colors">Save Credentials</button>
+            <button type="submit" className="mt-4 btn-primary py-2.5" style={{ background: '#FF3B30', color: 'white' }}>Save Credentials</button>
         </form>
     );
 }
