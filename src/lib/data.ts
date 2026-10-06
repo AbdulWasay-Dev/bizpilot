@@ -5,6 +5,7 @@ import transactionsData from './mock-db/transactions.json';
 import inventoryData from './mock-db/inventory.json';
 import decisionsData from './mock-db/decisions.json';
 import vendorsData from './mock-db/vendors.json';
+import socialAccountsData from './mock-db/socialAccounts.json';
 
 export type Business = {
     id: string;
@@ -21,7 +22,6 @@ export type Business = {
         lastActivity: string;
     };
 };
-
 export const MOCK_BUSINESSES: Business[] = businessesData as Business[];
 
 export type Post = {
@@ -29,13 +29,16 @@ export type Post = {
     businessId: string;
     date: number;
     title: string;
+    caption?: string;
     platform: string;
     time: string;
     status: 'scheduled' | 'draft' | 'published';
     platformColor: string;
     mediaUrl?: string | null;
+    allMediaUrls?: string[];
+    platforms?: string[];
+    tags?: string[];
 };
-
 export const MOCK_POSTS: Post[] = postsData as Post[];
 
 export type Idea = {
@@ -48,7 +51,6 @@ export type Idea = {
     ease: number;
     note: string;
 };
-
 export const MOCK_IDEAS: Idea[] = ideasData as Idea[];
 
 export type Transaction = {
@@ -60,9 +62,22 @@ export type Transaction = {
     date: string;
     ref: string;
     channel: string;
+    inventoryItemId?: string | null;
+    note?: string;
 };
-
 export const MOCK_TRANSACTIONS: Transaction[] = transactionsData as Transaction[];
+
+export type DigitalField = {
+    type: 'license_key' | 'account' | 'download_link' | 'coupon' | 'other';
+    licenseKey?: string;
+    email?: string;
+    password?: string;
+    recoveryEmail?: string;
+    couponCode?: string;
+    downloadUrl?: string;
+    notes?: string;
+    [key: string]: string | undefined;
+};
 
 export type InventoryItem = {
     id: string;
@@ -70,13 +85,19 @@ export type InventoryItem = {
     title: string;
     sku: string;
     category: string;
+    productType: 'physical' | 'digital';
     status: 'AVAILABLE' | 'SOLD' | 'RESERVED' | 'DEFECTIVE';
+    quantity: number;
     cost: number;
     price: number;
+    vendorId?: string | null;
     vendor: string;
+    description?: string;
+    attributes?: { key: string; value: string }[];
+    digitalFields?: DigitalField;
     payload: string;
+    tags?: string[];
 };
-
 export const MOCK_INVENTORY: InventoryItem[] = inventoryData as InventoryItem[];
 
 export type Decision = {
@@ -93,7 +114,6 @@ export type Decision = {
     outcomeRating: number | null;
     createdAt: string;
 };
-
 export const MOCK_DECISIONS: Decision[] = decisionsData as Decision[];
 
 export type Vendor = {
@@ -101,9 +121,27 @@ export type Vendor = {
     businessId: string;
     name: string;
     rating: number;
-    whatsapp: string;
-    telegram: string;
+    category?: string;
+    whatsapp?: string;
+    telegram?: string;
+    email?: string;
+    website?: string;
+    instagram?: string;
+    paymentMethods?: string;
     notes: string;
+    tags?: string[];
 };
-
 export const MOCK_VENDORS: Vendor[] = vendorsData as Vendor[];
+
+export type SocialAccount = {
+    id: string;
+    businessId: string;
+    platform: string;
+    username: string;
+    email: string;
+    password?: string;
+    recoveryEmail?: string;
+    phoneLinked?: string;
+    devices?: string;
+};
+export const MOCK_SOCIAL_ACCOUNTS: SocialAccount[] = socialAccountsData as SocialAccount[];

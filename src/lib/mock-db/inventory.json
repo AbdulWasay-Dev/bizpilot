@@ -1,7 +1,126 @@
 [
-    { "id": "inv1", "businessId": "techgear", "title": "Windows 11 Pro Key", "sku": "WIN11PRO-001", "category": "LICENSE", "status": "AVAILABLE", "cost": 4.50, "price": 24.99, "vendor": "Alpha Keys", "payload": "XXXXX-XXXXX-XXXXX-XXXXX-XXXXX" },
-    { "id": "inv2", "businessId": "techgear", "title": "Office 2024 Home & Business", "sku": "OFF24HB-002", "category": "LICENSE", "status": "AVAILABLE", "cost": 18.00, "price": 89.00, "vendor": "DevStudio Keys", "payload": "AAAAA-BBBBB-CCCCC-DDDDD-EEEEE" },
-    { "id": "inv3", "businessId": "techgear", "title": "Adobe CC 1yr Key", "sku": "ADCC1Y-003", "category": "LICENSE", "status": "SOLD", "cost": 22.00, "price": 45.00, "vendor": "SoftVault", "payload": "" },
-    { "id": "inv4", "businessId": "glow-skincare", "title": "Canva Pro Account", "sku": "CANVAPRO-004", "category": "ACCOUNT", "status": "AVAILABLE", "cost": 3.00, "price": 15.00, "vendor": "AccSupplier", "payload": "user@example.com / P@ssw0rd" },
-    { "id": "inv5", "businessId": "fitness-pro", "title": "Notion Template Pack", "sku": "NOTION-TPL-01", "category": "ASSET", "status": "AVAILABLE", "cost": 0, "price": 12.00, "vendor": "Self-made", "payload": "https://drive.google.com/file/xxx" }
+    {
+        "id": "inv1",
+        "businessId": "techgear",
+        "title": "Windows 11 Pro Key",
+        "sku": "WIN11PRO-001",
+        "category": "LICENSE",
+        "productType": "digital",
+        "status": "AVAILABLE",
+        "quantity": 5,
+        "cost": 4.50,
+        "price": 24.99,
+        "vendorId": "v1",
+        "vendor": "Alpha Keys",
+        "description": "Retail Windows 11 Pro product key. Lifetime activation.",
+        "attributes": [
+            { "key": "Version", "value": "11 Pro" },
+            { "key": "Activation Type", "value": "Online" }
+        ],
+        "digitalFields": {
+            "type": "license_key",
+            "licenseKey": "XXXXX-XXXXX-XXXXX-XXXXX-XXXXX"
+        },
+        "payload": "XXXXX-XXXXX-XXXXX-XXXXX-XXXXX",
+        "tags": ["windows", "license", "retail"]
+    },
+    {
+        "id": "inv2",
+        "businessId": "techgear",
+        "title": "Office 2024 Home & Business",
+        "sku": "OFF24HB-002",
+        "category": "LICENSE",
+        "productType": "digital",
+        "status": "AVAILABLE",
+        "quantity": 3,
+        "cost": 18.00,
+        "price": 89.00,
+        "vendorId": "v2",
+        "vendor": "DevStudio Keys",
+        "description": "Microsoft Office 2024 Home & Business – Mac/Windows.",
+        "attributes": [
+            { "key": "Platform", "value": "Mac + Windows" },
+            { "key": "Apps", "value": "Word, Excel, PowerPoint, Outlook" }
+        ],
+        "digitalFields": {
+            "type": "license_key",
+            "licenseKey": "AAAAA-BBBBB-CCCCC-DDDDD-EEEEE"
+        },
+        "payload": "AAAAA-BBBBB-CCCCC-DDDDD-EEEEE",
+        "tags": ["microsoft", "office", "mac"]
+    },
+    {
+        "id": "inv3",
+        "businessId": "techgear",
+        "title": "Adobe CC 1yr Key",
+        "sku": "ADCC1Y-003",
+        "category": "LICENSE",
+        "productType": "digital",
+        "status": "SOLD",
+        "quantity": 1,
+        "cost": 22.00,
+        "price": 45.00,
+        "vendorId": "v3",
+        "vendor": "SoftVault",
+        "description": "Adobe Creative Cloud 1-year individual subscription key.",
+        "attributes": [],
+        "digitalFields": {
+            "type": "license_key",
+            "licenseKey": ""
+        },
+        "payload": "",
+        "tags": ["adobe", "creative", "annual"]
+    },
+    {
+        "id": "inv4",
+        "businessId": "glow-skincare",
+        "title": "Canva Pro Account",
+        "sku": "CANVAPRO-004",
+        "category": "ACCOUNT",
+        "productType": "digital",
+        "status": "AVAILABLE",
+        "quantity": 1,
+        "cost": 3.00,
+        "price": 15.00,
+        "vendorId": "v4",
+        "vendor": "AccSupplier",
+        "description": "Canva Pro shared team account. Lifetime access.",
+        "attributes": [
+            { "key": "Plan", "value": "Pro (Team)" }
+        ],
+        "digitalFields": {
+            "type": "account",
+            "email": "user@example.com",
+            "password": "P@ssw0rd",
+            "recoveryEmail": "",
+            "notes": "Do not change the email"
+        },
+        "payload": "user@example.com / P@ssw0rd",
+        "tags": ["canva", "design", "account"]
+    },
+    {
+        "id": "inv5",
+        "businessId": "fitness-pro",
+        "title": "Notion Template Pack",
+        "sku": "NOTION-TPL-01",
+        "category": "ASSET",
+        "productType": "digital",
+        "status": "AVAILABLE",
+        "quantity": 99,
+        "cost": 0,
+        "price": 12.00,
+        "vendorId": null,
+        "vendor": "Self-made",
+        "description": "Complete fitness planner & habit tracker Notion template.",
+        "attributes": [
+            { "key": "Format", "value": "Notion Template" },
+            { "key": "Pages", "value": "12" }
+        ],
+        "digitalFields": {
+            "type": "download_link",
+            "downloadUrl": "https://drive.google.com/file/xxx"
+        },
+        "payload": "https://drive.google.com/file/xxx",
+        "tags": ["notion", "template", "fitness"]
+    }
 ]

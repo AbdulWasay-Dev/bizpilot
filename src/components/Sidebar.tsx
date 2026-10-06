@@ -4,7 +4,7 @@ import Link from 'next/link';
 import { usePathname, useParams, useRouter } from 'next/navigation';
 import {
     LayoutDashboard, Globe, Calendar, Package, DollarSign,
-    Brain, Lightbulb, ChevronDown, Settings, Check, Plus
+    Brain, Lightbulb, ChevronDown, Settings, Check, Plus, Lock
 } from 'lucide-react';
 import { useState } from 'react';
 import { useApp } from '@/contexts/AppContext';
@@ -102,6 +102,13 @@ export function Sidebar() {
             icon: Lightbulb,
             accent: 'text-amber-400',
             isActive: pathname?.includes(`/${activeBusinessId}/ideas`) || false,
+        },
+        {
+            label: 'Account Vault',
+            href: `/${activeBusinessId}/vault`,
+            icon: Lock,
+            accent: 'text-rose-400',
+            isActive: pathname?.includes(`/${activeBusinessId}/vault`) || false,
         },
     ];
 

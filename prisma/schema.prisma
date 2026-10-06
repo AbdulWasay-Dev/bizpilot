@@ -21,6 +21,7 @@ model Business {
   ideas        Idea[]
   transactions Transaction[]
   vendors      Vendor[]
+  socialAccounts SocialAccount[]
 }
 
 model Post {
@@ -54,33 +55,42 @@ model Idea {
 }
 
 model Transaction {
-  id          String   @id @default(cuid())
-  businessId  String
-  type        String   // SALE, EXPENSE, RETURN
-  description String
-  amount      Decimal  @db.Decimal(10, 2)
-  date        String
-  ref         String
-  channel     String
-  createdAt   DateTime @default(now())
-  updatedAt   DateTime @updatedAt
+  id              String   @id @default(cuid())
+  businessId      String
+  type            String   // SALE, EXPENSE, RETURN
+  description     String
+  amount          Decimal  @db.Decimal(10, 2)
+  date            String
+  ref             String
+  channel         String
+  inventoryItemId String?
+  note            String?  @db.Text
+  createdAt       DateTime @default(now())
+  updatedAt       DateTime @updatedAt
 
   business Business @relation(fields: [businessId], references: [id], onDelete: Cascade)
 }
 
 model InventoryItem {
-  id          String   @id @default(cuid())
-  businessId  String
-  title       String
-  sku         String
-  category    String
-  status      String   @default("AVAILABLE")
-  cost        Decimal  @db.Decimal(10, 2)
-  price       Decimal  @db.Decimal(10, 2)
-  vendor      String
-  payload     String?  @db.Text
-  createdAt   DateTime @default(now())
-  updatedAt   DateTime @updatedAt
+  id            String   @id @default(cuid())
+  businessId    String
+  title         String
+  sku           String
+  category      String
+  productType   String   @default("digital") // physical | digital
+  status        String   @default("AVAILABLE")
+  quantity      Int      @default(1)
+  cost          Decimal  @db.Decimal(10, 2)
+  price         Decimal  @db.Decimal(10, 2)
+  vendorId      String?
+  vendor        String
+  description   String?  @db.Text
+  attributes    Json?    // [{key, value}]
+  digitalFields Json?    // {type, licenseKey, email, password, ...}
+  payload       String?  @db.Text
+  tags          Json?    // string[]
+  createdAt     DateTime @default(now())
+  updatedAt     DateTime @updatedAt
 
   business Business @relation(fields: [businessId], references: [id], onDelete: Cascade)
 }
@@ -104,15 +114,37 @@ model Decision {
 }
 
 model Vendor {
-  id         String   @id @default(cuid())
-  businessId String
-  name       String
-  rating     Int      @default(5)
-  whatsapp   String?
-  telegram   String?
-  notes      String?  @db.Text
-  createdAt  DateTime @default(now())
-  updatedAt  DateTime @updatedAt
+  id             String   @id @default(cuid())
+  businessId     String
+  name           String
+  rating         Int      @default(5)
+  category       String?
+  whatsapp       String?
+  telegram       String?
+  email          String?
+  website        String?
+  instagram      String?
+  paymentMethods String?
+  notes          String?  @db.Text
+  tags           Json?
+  createdAt      DateTime @default(now())
+  updatedAt      DateTime @updatedAt
+
+  business Business @relation(fields: [businessId], references: [id], onDelete: Cascade)
+}
+
+model SocialAccount {
+  id            String   @id @default(cuid())
+  businessId    String
+  platform      String
+  username      String
+  email         String
+  password      String?
+  recoveryEmail String?
+  phoneLinked   String?
+  devices       String?  @db.Text
+  createdAt     DateTime @default(now())
+  updatedAt     DateTime @updatedAt
 
   business Business @relation(fields: [businessId], references: [id], onDelete: Cascade)
 }

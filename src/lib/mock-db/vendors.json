@@ -1,6 +1,62 @@
 [
-    { "id": "v1", "businessId": "techgear", "name": "Alpha Keys", "rating": 5, "whatsapp": "https://wa.me/123456", "telegram": "@alphakeys", "notes": "48h replacement warranty" },
-    { "id": "v2", "businessId": "techgear", "name": "DevStudio Keys", "rating": 4, "whatsapp": "https://wa.me/789012", "telegram": "@devstudiokeys", "notes": "PayPal only" },
-    { "id": "v3", "businessId": "techgear", "name": "SoftVault", "rating": 3, "whatsapp": "https://wa.me/345678", "telegram": "@softvault", "notes": "No warranty on Adobe keys" },
-    { "id": "v4", "businessId": "glow-skincare", "name": "AccSupplier", "rating": 4, "whatsapp": "https://wa.me/111111", "telegram": "@accsupplier", "notes": "Premium accounts" }
+    {
+        "id": "v1",
+        "businessId": "techgear",
+        "name": "Alpha Keys",
+        "rating": 5,
+        "category": "Digital Goods",
+        "whatsapp": "+1234567890",
+        "telegram": "@alphakeys",
+        "email": "alpha@keys.com",
+        "website": "https://alphakeys.com",
+        "instagram": "@alphakeys",
+        "paymentMethods": "PayPal, Crypto",
+        "notes": "48h replacement warranty on all keys. Very reliable.",
+        "tags": ["fast", "trusted", "warranty"]
+    },
+    {
+        "id": "v2",
+        "businessId": "techgear",
+        "name": "DevStudio Keys",
+        "rating": 4,
+        "category": "Software Licenses",
+        "whatsapp": "+9876543210",
+        "telegram": "@devstudiokeys",
+        "email": "support@devstudiokeys.com",
+        "website": "",
+        "instagram": "",
+        "paymentMethods": "PayPal only",
+        "notes": "PayPal only. Good stock but slow response times.",
+        "tags": ["paypal", "office", "microsoft"]
+    },
+    {
+        "id": "v3",
+        "businessId": "techgear",
+        "name": "SoftVault",
+        "rating": 3,
+        "category": "Software Licenses",
+        "whatsapp": "+3456789012",
+        "telegram": "@softvault",
+        "email": "",
+        "website": "",
+        "instagram": "",
+        "paymentMethods": "Crypto",
+        "notes": "No warranty on Adobe keys. Cheaper but riskier.",
+        "tags": ["adobe", "cheap", "crypto"]
+    },
+    {
+        "id": "v4",
+        "businessId": "glow-skincare",
+        "name": "AccSupplier",
+        "rating": 4,
+        "category": "Accounts",
+        "whatsapp": "+1111111111",
+        "telegram": "@accsupplier",
+        "email": "accsupplier@gmail.com",
+        "website": "",
+        "instagram": "@accsupplier",
+        "paymentMethods": "Binance Pay, Crypto",
+        "notes": "Premium account supplier. Good replacement policy.",
+        "tags": ["accounts", "canva", "premium"]
+    }
 ]

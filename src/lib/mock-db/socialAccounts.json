@@ -1,0 +1,35 @@
+[
+    {
+        "id": "sa1",
+        "businessId": "glow-skincare",
+        "platform": "Instagram",
+        "username": "@glowskincare_offical",
+        "email": "hello@glowskincare.com",
+        "password": "Password123!",
+        "recoveryEmail": "admin@glowskincare.com",
+        "phoneLinked": "+1 234 567 8900",
+        "devices": "iPhone 14 Pro, MacBook Air (Office)"
+    },
+    {
+        "id": "sa2",
+        "businessId": "glow-skincare",
+        "platform": "TikTok",
+        "username": "@glow.skin",
+        "email": "socials@glowskincare.com",
+        "password": "TiktokPassword456$",
+        "recoveryEmail": "hello@glowskincare.com",
+        "phoneLinked": "+1 234 567 8900",
+        "devices": "iPhone 14 Pro"
+    },
+    {
+        "id": "sa3",
+        "businessId": "techgear",
+        "platform": "Twitter",
+        "username": "@techgear_hq",
+        "email": "founders@techgear.io",
+        "password": "SecureTweet789*",
+        "recoveryEmail": "personal@founder.com",
+        "phoneLinked": "+44 7700 900077",
+        "devices": "Windows PC, iPhone 13"
+    }
+]

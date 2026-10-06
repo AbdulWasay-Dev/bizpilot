@@ -8,12 +8,13 @@ import {
     Transaction, MOCK_TRANSACTIONS,
     InventoryItem, MOCK_INVENTORY,
     Decision, MOCK_DECISIONS,
-    Vendor, MOCK_VENDORS
+    Vendor, MOCK_VENDORS,
+    SocialAccount, MOCK_SOCIAL_ACCOUNTS
 } from '@/lib/data';
 
-export type { Business, Post, Idea, Transaction, InventoryItem, Decision, Vendor };
+export type { Business, Post, Idea, Transaction, InventoryItem, Decision, Vendor, SocialAccount };
 
-export type ModalType = 'ADD_BUSINESS' | 'ADD_POST' | 'LOG_SALE' | 'ADD_EXPENSE' | 'ADD_STOCK' | 'NEW_DECISION' | 'ADD_VENDOR' | null;
+export type ModalType = 'ADD_BUSINESS' | 'ADD_POST' | 'LOG_SALE' | 'ADD_EXPENSE' | 'ADD_STOCK' | 'NEW_DECISION' | 'ADD_VENDOR' | 'ADD_SOCIAL_ACCOUNT' | null;
 
 type AppContextType = {
     businesses: Business[];
@@ -37,6 +38,9 @@ type AppContextType = {
 
     vendors: Vendor[];
     addVendor: (v: Omit<Vendor, 'id'>) => void;
+
+    socialAccounts: SocialAccount[];
+    addSocialAccount: (s: Omit<SocialAccount, 'id'>) => void;
 
     activeModal: ModalType;
     setActiveModal: (m: ModalType) => void;
@@ -65,6 +69,9 @@ const AppContext = createContext<AppContextType>({
     vendors: MOCK_VENDORS,
     addVendor: () => {},
 
+    socialAccounts: MOCK_SOCIAL_ACCOUNTS,
+    addSocialAccount: () => {},
+
     activeModal: null,
     setActiveModal: () => {},
 });
@@ -77,6 +84,7 @@ export function AppProvider({ children }: { children: ReactNode }) {
     const [inventory, setInventory] = useState<InventoryItem[]>(MOCK_INVENTORY);
     const [decisions, setDecisions] = useState<Decision[]>(MOCK_DECISIONS);
     const [vendors, setVendors] = useState<Vendor[]>(MOCK_VENDORS);
+    const [socialAccounts, setSocialAccounts] = useState<SocialAccount[]>(MOCK_SOCIAL_ACCOUNTS);
     const [activeModal, setActiveModal] = useState<ModalType>(null);
 
     const generateId = () => Math.random().toString(36).substr(2, 9);
@@ -98,6 +106,7 @@ export function AppProvider({ children }: { children: ReactNode }) {
     };
     const addDecision = (d: Omit<Decision, 'id'>) => setDecisions([...decisions, { ...d, id: generateId() }]);
     const addVendor = (v: Omit<Vendor, 'id'>) => setVendors([...vendors, { ...v, id: generateId() }]);
+    const addSocialAccount = (s: Omit<SocialAccount, 'id'>) => setSocialAccounts([...socialAccounts, { ...s, id: generateId() }]);
 
     return (
         <AppContext.Provider value={{ 
@@ -108,6 +117,7 @@ export function AppProvider({ children }: { children: ReactNode }) {
             inventory, addInventoryItem, updateInventoryItem,
             decisions, addDecision,
             vendors, addVendor,
+            socialAccounts, addSocialAccount,
             activeModal, setActiveModal
         }}>
             {children}

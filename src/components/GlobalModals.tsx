@@ -23,6 +23,7 @@ export function GlobalModals() {
                         {activeModal === 'ADD_STOCK' && 'Add Stock'}
                         {activeModal === 'ADD_VENDOR' && 'Add Vendor'}
                         {activeModal === 'NEW_DECISION' && 'New Decision'}
+                        {activeModal === 'ADD_SOCIAL_ACCOUNT' && 'Store Credentials'}
                     </h2>
                     <button onClick={closeModal} className="text-white/50 hover:text-white p-1 rounded-lg hover:bg-white/5">
                         <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M18 6 6 18"/><path d="m6 6 12 12"/></svg>
@@ -37,6 +38,7 @@ export function GlobalModals() {
                     {activeModal === 'ADD_STOCK' && <AddStockForm onClose={closeModal} appCtx={appCtx} />}
                     {activeModal === 'ADD_VENDOR' && <AddVendorForm onClose={closeModal} appCtx={appCtx} />}
                     {activeModal === 'NEW_DECISION' && <AddDecisionForm onClose={closeModal} addDecision={appCtx.addDecision} businesses={appCtx.businesses} />}
+                    {activeModal === 'ADD_SOCIAL_ACCOUNT' && <AddSocialAccountForm onClose={closeModal} appCtx={appCtx} />}
                 </div>
             </div>
         </div>
@@ -360,6 +362,77 @@ function AddDecisionForm({ onClose, addDecision, businesses }: any) {
                 </select>
             </div>
             <button type="submit" className="mt-4 bg-white text-black font-semibold rounded-lg p-2 text-sm hover:bg-white/90">Add Decision</button>
+        </form>
+    );
+}
+
+function AddSocialAccountForm({ onClose, appCtx }: any) {
+    const { businesses, addSocialAccount } = appCtx;
+    const [businessId, setBusinessId] = useState(businesses[0]?.id || '');
+    const [platform, setPlatform] = useState('');
+    const [username, setUsername] = useState('');
+    const [email, setEmail] = useState('');
+    const [password, setPassword] = useState('');
+    const [recoveryEmail, setRecoveryEmail] = useState('');
+    const [phoneLinked, setPhoneLinked] = useState('');
+    const [devices, setDevices] = useState('');
+
+    const submit = (e: any) => {
+        e.preventDefault();
+        addSocialAccount({
+            businessId,
+            platform,
+            username,
+            email,
+            password,
+            recoveryEmail,
+            phoneLinked,
+            devices
+        });
+        onClose();
+    };
+
+    return (
+        <form onSubmit={submit} className="flex flex-col gap-4">
+            <div>
+                <label className="text-xs font-medium text-white/50 mb-1 block">Workspace</label>
+                <select value={businessId} onChange={e => setBusinessId(e.target.value)} className="w-full bg-white/5 border border-white/10 rounded-lg p-2 text-sm text-white focus:outline-none focus:border-rose-500">
+                    {businesses.map((b: any) => <option key={b.id} value={b.id}>{b.name}</option>)}
+                </select>
+            </div>
+            <div className="grid grid-cols-2 gap-4">
+                <div>
+                    <label className="text-xs font-medium text-white/50 mb-1 block">Platform</label>
+                    <input required value={platform} onChange={e => setPlatform(e.target.value)} placeholder="e.g. Instagram" className="w-full bg-white/5 border border-white/10 rounded-lg p-2 text-sm text-white focus:outline-none focus:border-rose-500" />
+                </div>
+                <div>
+                    <label className="text-xs font-medium text-white/50 mb-1 block">Username / Handle</label>
+                    <input required value={username} onChange={e => setUsername(e.target.value)} placeholder="@handle" className="w-full bg-white/5 border border-white/10 rounded-lg p-2 text-sm text-white focus:outline-none focus:border-rose-500" />
+                </div>
+            </div>
+            <div>
+                <label className="text-xs font-medium text-white/50 mb-1 block">Login Email</label>
+                <input type="email" required value={email} onChange={e => setEmail(e.target.value)} placeholder="hello@company.com" className="w-full bg-white/5 border border-white/10 rounded-lg p-2 text-sm text-white focus:outline-none focus:border-rose-500" />
+            </div>
+            <div>
+                <label className="text-xs font-medium text-white/50 mb-1 block">Password</label>
+                <input type="text" required value={password} onChange={e => setPassword(e.target.value)} placeholder="Secure password" className="w-full bg-white/5 border border-white/10 rounded-lg p-2 text-sm text-white focus:outline-none focus:border-rose-500" />
+            </div>
+            <div className="grid grid-cols-2 gap-4">
+                <div>
+                    <label className="text-xs font-medium text-white/50 mb-1 block">Recovery Email (Optional)</label>
+                    <input type="email" value={recoveryEmail} onChange={e => setRecoveryEmail(e.target.value)} className="w-full bg-white/5 border border-white/10 rounded-lg p-2 text-sm text-white focus:outline-none focus:border-rose-500" />
+                </div>
+                <div>
+                    <label className="text-xs font-medium text-white/50 mb-1 block">Linked Phone (Optional)</label>
+                    <input type="tel" value={phoneLinked} onChange={e => setPhoneLinked(e.target.value)} className="w-full bg-white/5 border border-white/10 rounded-lg p-2 text-sm text-white focus:outline-none focus:border-rose-500" />
+                </div>
+            </div>
+            <div>
+                <label className="text-xs font-medium text-white/50 mb-1 block">Authorized Devices (Optional)</label>
+                <input type="text" value={devices} onChange={e => setDevices(e.target.value)} placeholder="e.g. iPhone 14, MacBook Pro" className="w-full bg-white/5 border border-white/10 rounded-lg p-2 text-sm text-white focus:outline-none focus:border-rose-500" />
+            </div>
+            <button type="submit" className="mt-4 bg-rose-500 hover:bg-rose-600 text-white font-semibold rounded-lg p-2 text-sm transition-colors">Save Credentials</button>
         </form>
     );
 }
