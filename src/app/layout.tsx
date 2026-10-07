@@ -43,7 +43,12 @@ export default async function RootLayout({ children }: { children: React.ReactNo
             // Mock metrics since we haven't stored them yet
             metrics: { revenueMonth: 0, itemsSold: 0, postsWeek: 0, targetPostsWeek: 5, streak: 0, neglectScore: 100, lastActivity: 'Just now' }
         })),
-        posts,
+        posts: posts.map(p => ({
+            ...p,
+            platforms: typeof p.platforms === 'string' ? JSON.parse(p.platforms) : p.platforms,
+            tags: typeof p.tags === 'string' ? JSON.parse(p.tags) : p.tags,
+            allMediaUrls: typeof p.allMediaUrls === 'string' ? JSON.parse(p.allMediaUrls) : p.allMediaUrls,
+        })),
         ideas,
         transactions,
         inventory: inventory.map(i => ({

@@ -29,11 +29,15 @@ model Post {
   businessId    String
   date          Int
   title         String
+  caption       String?  @db.Text
   platform      String
   time          String
   status        String   @default("draft")
-  platformColor String
+  platformColor String?
   mediaUrl      String?  @db.Text
+  allMediaUrls  Json?
+  platforms     Json?
+  tags          Json?
   createdAt     DateTime @default(now())
   updatedAt     DateTime @updatedAt
 

@@ -6,7 +6,7 @@ import { useApp } from '@/contexts/AppContext';
 import {
     ChevronLeft, ChevronRight, Plus, X, Upload, Copy,
     Calendar, Clock, Tag, Image as ImageIcon, Video,
-    CheckCircle2, AlignLeft
+    CheckCircle2, AlignLeft, Download
 } from 'lucide-react';
 import { UniversalDashboardButton } from '@/components/UniversalDashboardButton';
 
@@ -343,8 +343,11 @@ export default function ContentStudio() {
                                             return (
                                                 <div className={`grid gap-0.5 border-b ${allMedia.length === 1 ? 'grid-cols-1' : allMedia.length === 2 ? 'grid-cols-2' : 'grid-cols-3'}`} style={{ borderColor: 'var(--border)' }}>
                                                     {allMedia.map((url: string, idx: number) => (
-                                                        <div key={idx} className="aspect-square" style={{ background: 'var(--fill-2)' }}>
+                                                        <div key={idx} className="aspect-square relative group" style={{ background: 'var(--fill-2)' }}>
                                                             {url.match(/\.(mp4|webm|mov)$/i) ? <video src={url} controls className="w-full h-full object-cover" /> : <img src={url} alt="" className="w-full h-full object-cover" />}
+                                                            <a href={url} download={`media-${idx}`} className="absolute top-2 right-2 p-1.5 bg-black/60 rounded-lg text-white opacity-0 group-hover:opacity-100 transition-opacity hover:bg-black/80 flex items-center justify-center shadow-lg z-10" title="Download Media">
+                                                                <Download className="w-4 h-4" />
+                                                            </a>
                                                         </div>
                                                     ))}
                                                 </div>
