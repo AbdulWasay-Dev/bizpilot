@@ -67,43 +67,56 @@ export function AppProvider({ children, initialData }: { children: ReactNode, in
     }, [initialData]);
 
     const addBusiness = async (b: Omit<Business, 'id' | 'metrics'>) => {
-        // Optimistic UI update could be added, but for DB sync we just call the server action
-        // which will revalidate and trigger a re-render with new initialData.
-        await createBusiness(b);
+        const optimistic = { ...b, id: 'temp-' + Date.now(), metrics: { revenueMonth: 0, itemsSold: 0, postsWeek: 0, targetPostsWeek: 5, streak: 0, neglectScore: 100, lastActivity: 'Just now' } } as Business;
+        setBusinesses(prev => [...prev, optimistic]);
+        try { await createBusiness(b); } catch (e) { console.error(e); setBusinesses(prev => prev.filter(x => x.id !== optimistic.id)); }
     };
 
     const addPost = async (p: Omit<Post, 'id'>) => {
-        await createPost(p);
+        const optimistic = { ...p, id: 'temp-' + Date.now() } as Post;
+        setPosts(prev => [...prev, optimistic]);
+        try { await createPost(p); } catch (e) { console.error(e); setPosts(prev => prev.filter(x => x.id !== optimistic.id)); }
     };
 
     const addIdea = async (i: Omit<Idea, 'id'>) => {
-        await createIdea(i);
+        const optimistic = { ...i, id: 'temp-' + Date.now() } as Idea;
+        setIdeas(prev => [...prev, optimistic]);
+        try { await createIdea(i); } catch (e) { console.error(e); setIdeas(prev => prev.filter(x => x.id !== optimistic.id)); }
     };
 
     const addTransaction = async (t: Omit<Transaction, 'id'>) => {
-        await createTransaction(t);
+        const optimistic = { ...t, id: 'temp-' + Date.now() } as Transaction;
+        setTransactions(prev => [...prev, optimistic]);
+        try { await createTransaction(t); } catch (e) { console.error(e); setTransactions(prev => prev.filter(x => x.id !== optimistic.id)); }
     };
 
     const addInventoryItem = async (i: Omit<InventoryItem, 'id'>) => {
-        // Transform the object if needed, ensure DB types match
-        // Payload might be missing or JSON
-        await createInventoryItem(i);
+        const optimistic = { ...i, id: 'temp-' + Date.now() } as InventoryItem;
+        setInventory(prev => [...prev, optimistic]);
+        try { await createInventoryItem(i); } catch (e) { console.error(e); setInventory(prev => prev.filter(x => x.id !== optimistic.id)); }
     };
 
     const updateInventoryItem = async (id: string, updates: Partial<InventoryItem>) => {
-        await updateInventoryItemDB(id, updates);
+        setInventory(prev => prev.map(item => item.id === id ? { ...item, ...updates } : item));
+        try { await updateInventoryItemDB(id, updates); } catch (e) { console.error(e); }
     };
 
     const addDecision = async (d: Omit<Decision, 'id'>) => {
-        await createDecision(d);
+        const optimistic = { ...d, id: 'temp-' + Date.now() } as Decision;
+        setDecisions(prev => [...prev, optimistic]);
+        try { await createDecision(d); } catch (e) { console.error(e); setDecisions(prev => prev.filter(x => x.id !== optimistic.id)); }
     };
 
     const addVendor = async (v: Omit<Vendor, 'id'>) => {
-        await createVendor(v);
+        const optimistic = { ...v, id: 'temp-' + Date.now() } as Vendor;
+        setVendors(prev => [...prev, optimistic]);
+        try { await createVendor(v); } catch (e) { console.error(e); setVendors(prev => prev.filter(x => x.id !== optimistic.id)); }
     };
 
     const addSocialAccount = async (s: Omit<SocialAccount, 'id'>) => {
-        await createSocialAccount(s);
+        const optimistic = { ...s, id: 'temp-' + Date.now() } as SocialAccount;
+        setSocialAccounts(prev => [...prev, optimistic]);
+        try { await createSocialAccount(s); } catch (e) { console.error(e); setSocialAccounts(prev => prev.filter(x => x.id !== optimistic.id)); }
     };
 
     return (
